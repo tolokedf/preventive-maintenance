@@ -16,7 +16,12 @@ from reportlab.platypus import (
 )
 
 BASE_DIR = Path(__file__).resolve().parent
-UPLOADS_DIR = BASE_DIR / "data" / "uploads"
+ROOT_DATABASE_DIR = BASE_DIR.parent / "Database" / "preventive_maintenance"
+if ROOT_DATABASE_DIR.parent.exists():
+    DATA_DIR = ROOT_DATABASE_DIR
+else:
+    DATA_DIR = BASE_DIR / "data"
+UPLOADS_DIR = DATA_DIR / "uploads"
 
 # DF Corporate Colors
 PRIMARY_COLOR = colors.HexColor("#0f172a") # Slate 900

@@ -25,7 +25,12 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "df-preventive-maintenance-secret-2026")
 PORT = int(os.environ.get("PORT", 8000))
 
-DATA_DIR = BASE_DIR / "data"
+ROOT_DATABASE_DIR = BASE_DIR.parent / "Database" / "preventive_maintenance"
+if ROOT_DATABASE_DIR.parent.exists():
+    DATA_DIR = ROOT_DATABASE_DIR
+else:
+    DATA_DIR = BASE_DIR / "data"
+
 UPLOADS_DIR = DATA_DIR / "uploads"
 REPORTS_DIR = DATA_DIR / "reports"
 DB_FILE = DATA_DIR / "db.json"
