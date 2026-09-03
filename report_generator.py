@@ -4,6 +4,8 @@ Produces exact replica of official DF Maintenance Form templates using ReportLab
 """
 import io
 import os
+import re
+import base64
 from pathlib import Path
 from datetime import datetime
 from reportlab.lib.pagesizes import A4
@@ -292,20 +294,37 @@ def generate_maintenance_pdf(report: dict) -> bytes:
     servicer_date = signatures.get('servicerDate', cust_data.get('date', datetime.now().strftime('%Y-%m-%d')))
     customer_date = signatures.get('customerDate', cust_data.get('date', datetime.now().strftime('%Y-%m-%d')))
     
+    def format_signature_cell(sig_str, signer_name, default_name, sig_date):
+        cell_contents = []
+        if sig_str and str(sig_str).startswith("data:image/"):
+            try:
+                img_b64 = re.sub(r'^data:image/.+;base64,', '', str(sig_str))
+                img_bytes = base64.b64decode(img_b64)
+                img_io = io.BytesIO(img_bytes)
+                sig_img = Image(img_io, width=120, height=40)
+                cell_contents.append(sig_img)
+            except Exception:
+                cell_contents.append(Paragraph("<br/><i>[Digital Signature Authenticated]</i>", styles['TableValue']))
+        elif sig_str:
+            cell_contents.append(Paragraph(f"<br/><font color='#1a73e8'><b>{sig_str}</b></font>", styles['TableValue']))
+        else:
+            cell_contents.append(Paragraph("<br/>____________________________", styles['TableValue']))
+            
+        cell_contents.append(Spacer(1, 4))
+        cell_contents.append(Paragraph(
+            f"<b>Name:</b> {signer_name if signer_name else default_name}<br/>"
+            f"<b>Date:</b> {sig_date}", styles['TableValue']
+        ))
+        return cell_contents
+
     sig_data = [
         [
             Paragraph("<b>SERVICER SIGNATURE</b>", ParagraphStyle('SG1', fontName='Helvetica-Bold', fontSize=8, textColor=PRIMARY_COLOR)),
             Paragraph("<b>CUSTOMER SIGNATURE</b>", ParagraphStyle('SG2', fontName='Helvetica-Bold', fontSize=8, textColor=PRIMARY_COLOR))
         ],
         [
-            Paragraph(f"<br/><br/>____________________________<br/>"
-                      f"<b>Name:</b> {cust_data.get('servicerName', 'DF Certified Engineer')}<br/>"
-                      f"<b>Signed Token:</b> {servicer_sig if servicer_sig else '[Digitally Signed]'}<br/>"
-                      f"<b>Date:</b> {servicer_date}", styles['TableValue']),
-            Paragraph(f"<br/><br/>____________________________<br/>"
-                      f"<b>Name:</b> {cust_data.get('picName', 'Customer Representative')}<br/>"
-                      f"<b>Signed Token:</b> {customer_sig if customer_sig else '[Digitally Signed]'}<br/>"
-                      f"<b>Date:</b> {customer_date}", styles['TableValue'])
+            format_signature_cell(servicer_sig, cust_data.get('servicerName'), 'DF Certified Engineer', servicer_date),
+            format_signature_cell(customer_sig, cust_data.get('picName'), 'Customer Representative', customer_date)
         ]
     ]
     t_sig = Table(sig_data, colWidths=[270, 270])

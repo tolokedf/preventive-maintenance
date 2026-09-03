@@ -146,9 +146,15 @@ def reports_handler():
         data["createdAt"] = data.get("createdAt") or datetime.utcnow().isoformat() + "Z"
         data["updatedAt"] = datetime.utcnow().isoformat() + "Z"
         
-        db.setdefault("reports", []).append(data)
+        reports = db.setdefault("reports", [])
+        existing_idx = next((i for i, r in enumerate(reports) if r.get("id") == report_id), None)
+        if existing_idx is not None:
+            reports[existing_idx] = data
+        else:
+            reports.append(data)
+            
         write_db(db)
-        return jsonify(data), 201
+        return jsonify(data), 200 if existing_idx is not None else 201
 
 @app.route("/api/reports/<report_id>", methods=["GET", "PUT", "DELETE"])
 def single_report(report_id):

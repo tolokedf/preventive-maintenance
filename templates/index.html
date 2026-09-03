@@ -1,47 +1,277 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DF Preventive Maintenance & Robot SOP System</title>
+  
+  <!-- Immediate Theme Pre-loader (Prevents Theme Flicker) -->
+  <script>
+    (function() {
+      try {
+        const savedTheme = localStorage.getItem('df_theme_mode') || 'system';
+        let effectiveTheme = savedTheme;
+        if (savedTheme === 'system') {
+          effectiveTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        if (effectiveTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-    .glass-card { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); }
-    @media print { .no-print { display: none !important; } }
+    :root {
+      --g-blue: #1a73e8;
+      --g-blue-hover: #1557b0;
+      --g-blue-bg: #e8f0fe;
+      --g-blue-border: #d2e3fc;
+      --g-green: #1e8e3e;
+      --g-green-hover: #137333;
+      --g-green-bg: #e6f4ea;
+      --g-green-border: #ceead6;
+      --g-yellow: #f9ab00;
+      --g-yellow-bg: #fef7e0;
+      --g-yellow-border: #feefc3;
+      --g-red: #d93025;
+      --g-red-bg: #fce8e6;
+      --g-red-border: #fad2cf;
+      --g-surface: #ffffff;
+      --g-surface-variant: #f8fafd;
+      --g-bg: #f8fafd;
+      --g-border: #dadce0;
+      --g-text: #202124;
+      --g-muted: #5f6368;
+      --canvas-bg: #ffffff;
+      --canvas-line: #1a73e8;
+    }
+
+    .dark {
+      --g-blue: #8ab4f8;
+      --g-blue-hover: #aecbfa;
+      --g-blue-bg: rgba(138, 180, 248, 0.15);
+      --g-blue-border: rgba(138, 180, 248, 0.3);
+      --g-green: #81c995;
+      --g-green-hover: #a8dab5;
+      --g-green-bg: rgba(129, 201, 149, 0.15);
+      --g-green-border: rgba(129, 201, 149, 0.3);
+      --g-yellow: #fdd663;
+      --g-yellow-bg: rgba(253, 214, 99, 0.15);
+      --g-yellow-border: rgba(253, 214, 99, 0.3);
+      --g-red: #f28b82;
+      --g-red-bg: rgba(242, 139, 130, 0.15);
+      --g-red-border: rgba(242, 139, 130, 0.3);
+      --g-surface: #1e1f20;
+      --g-surface-variant: #282a2c;
+      --g-bg: #131314;
+      --g-border: #3c4043;
+      --g-text: #e3e3e3;
+      --g-muted: #9aa0a6;
+      --canvas-bg: #1e1f20;
+      --canvas-line: #8ab4f8;
+    }
+
+    body {
+      font-family: 'Google Sans Text', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--g-bg);
+      color: var(--g-text);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    h1, h2, h3, h4, .font-google {
+      font-family: 'Google Sans', 'Google Sans Text', 'Roboto', sans-serif;
+    }
+
+    .font-mono {
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    .google-card {
+      background: var(--g-surface);
+      border: 1px solid var(--g-border);
+      border-radius: 16px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .google-card:hover {
+      border-color: var(--g-blue);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .google-btn-primary {
+      background-color: var(--g-blue);
+      color: #ffffff;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dark .google-btn-primary {
+      color: #131314;
+      font-weight: 600;
+    }
+
+    .google-btn-primary:hover {
+      opacity: 0.92;
+      box-shadow: 0 1px 3px 1px rgba(66, 133, 244, 0.28);
+    }
+
+    .google-btn-outlined {
+      background-color: var(--g-surface);
+      border: 1px solid var(--g-border);
+      color: var(--g-text);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .google-btn-outlined:hover {
+      background-color: var(--g-surface-variant);
+      border-color: var(--g-muted);
+    }
+
+    .google-btn-tonal {
+      background-color: var(--g-blue-bg);
+      color: var(--g-blue);
+      border: 1px solid var(--g-blue-border);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .google-btn-tonal:hover {
+      opacity: 0.9;
+    }
+
+    .google-input {
+      background-color: var(--g-surface);
+      border: 1px solid var(--g-border);
+      color: var(--g-text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .google-input:focus {
+      outline: none;
+      border-color: var(--g-blue);
+      box-shadow: 0 0 0 2px var(--g-blue-bg);
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Signature Canvas Styling */
+    .sig-canvas-container {
+      background: var(--canvas-bg);
+      border: 1.5px dashed var(--g-border);
+      border-radius: 12px;
+      position: relative;
+      touch-action: none;
+    }
+
+    .sig-canvas-container:hover {
+      border-color: var(--g-blue);
+    }
+
+    canvas.signature-pad {
+      cursor: crosshair;
+      width: 100%;
+      height: 120px;
+      display: block;
+      border-radius: 12px;
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-emerald-600 selection:text-white">
+<body class="min-h-screen flex flex-col justify-between selection:bg-[#1a73e8] selection:text-white">
 
-  <!-- Navigation Header -->
-  <header class="glass border-b border-slate-800 sticky top-0 z-40 px-6 py-4 no-print">
+  <!-- Google 4-Color Accent Strip at Top -->
+  <div class="h-1 w-full bg-gradient-to-r from-[#4285F4] via-[#EA4335] via-[#FBBC04] to-[#34A853] sticky top-0 z-50 no-print"></div>
+
+  <!-- Google App Bar (Navigation Header) -->
+  <header class="bg-[var(--g-surface)]/95 backdrop-blur-md border-b border-[var(--g-border)] sticky top-1 z-40 px-6 py-3 shadow-[0_1px_2px_0_rgba(0,0,0,0.06)] no-print">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <a href="http://localhost:8080" onclick="window.location.href='http://' + window.location.hostname + ':8080'; return false;" class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-lg hover:bg-emerald-500/30 transition-all" title="Back to Central Portal">
-          🛠️
+      
+      <!-- Brand / Title -->
+      <div class="flex items-center gap-3.5">
+        <a href="http://localhost:8080" onclick="window.location.href='http://' + window.location.hostname + ':8080'; return false;" class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#00787c] to-[#00b5b8] p-1.5 flex items-center justify-center shadow-md shadow-[#00b5b8]/20 flex-shrink-0 hover:opacity-90 transition-all" title="Return to Central Portal Hub">
+          <img src="/static/df_logo_white.png" alt="DF" class="w-full h-full object-contain">
         </a>
         <div>
-          <h1 class="text-base font-bold text-white flex items-center gap-2">
+          <h1 class="text-base sm:text-lg font-semibold tracking-tight text-[var(--g-text)] flex items-center gap-2">
             Preventive Maintenance SOP
-            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">Python / ReportLab</span>
+            <span class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[var(--g-blue-bg)] text-[var(--g-blue)] border border-[var(--g-blue-border)] font-mono">
+              ReportLab Engine
+            </span>
           </h1>
-          <p class="text-xs text-slate-400">AMR Model Maintenance Engine & Official Form Generator</p>
+          <p class="text-xs text-[var(--g-muted)]">AMR Inspection Engine & Official Audit Generator</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
-        <button onclick="showDashboard()" id="nav-btn-dash" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 transition">
-          Audit Records
+      <!-- Action Buttons & Theme Switcher -->
+      <div class="flex items-center gap-2 sm:gap-2.5">
+        
+        <!-- Audit Records Navigation Tab -->
+        <button onclick="showDashboard()" id="nav-btn-dash" class="text-xs font-medium px-4 py-2 rounded-full google-btn-tonal flex items-center gap-1.5 shadow-xs">
+          <span class="material-symbols-outlined text-[18px]">table_rows</span>
+          <span>Audit Records</span>
         </button>
-        <button onclick="startNewAudit()" class="text-xs font-semibold px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-500 shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
-          <span>+</span> New Maintenance SOP
+
+        <!-- The ONLY Primary New Maintenance Action Button -->
+        <button onclick="startNewAudit()" id="nav-btn-new-audit" class="text-xs font-medium px-4 py-2 rounded-full google-btn-primary flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-[18px]">add</span>
+          <span>New Maintenance SOP</span>
         </button>
-        <a href="http://localhost:8080" onclick="window.location.href='http://' + window.location.hostname + ':8080'; return false;" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition">
-          Portal Hub &rarr;
+
+        <!-- Go back to Portal Button (Top Right) -->
+        <a href="http://localhost:8080" onclick="window.location.href='http://' + window.location.hostname + ':8080'; return false;" class="text-xs font-semibold px-3.5 py-2 rounded-full google-btn-outlined flex items-center gap-1.5 shadow-xs" title="Go back to Portal">
+          <i class="fa-solid fa-arrow-left text-[11px]"></i>
+          <span>Portal</span>
+        </a>
+
+        <!-- Theme Switcher Dropdown (Light / Dark / System) -->
+        <div class="relative">
+          <button onclick="toggleThemeMenu()" id="themeBtn" class="text-xs font-medium p-2 rounded-full google-btn-outlined flex items-center justify-center" title="Change Theme Mode">
+            <span id="themeIcon" class="material-symbols-outlined text-[18px] text-[var(--g-muted)]">dark_mode</span>
+          </button>
+          
+          <div id="themeMenu" class="hidden absolute right-0 mt-2 w-44 bg-[var(--g-surface)] rounded-2xl border border-[var(--g-border)] shadow-lg p-1.5 z-50">
+            <button onclick="setTheme('light')" class="w-full text-left text-xs px-3 py-2 rounded-xl flex items-center gap-2 hover:bg-[var(--g-surface-variant)] text-[var(--g-text)] transition">
+              <span class="material-symbols-outlined text-[16px] text-amber-500">light_mode</span>
+              <span>Light Theme</span>
+            </button>
+            <button onclick="setTheme('dark')" class="w-full text-left text-xs px-3 py-2 rounded-xl flex items-center gap-2 hover:bg-[var(--g-surface-variant)] text-[var(--g-text)] transition">
+              <span class="material-symbols-outlined text-[16px] text-indigo-400">dark_mode</span>
+              <span>Dark Theme</span>
+            </button>
+            <button onclick="setTheme('system')" class="w-full text-left text-xs px-3 py-2 rounded-xl flex items-center gap-2 hover:bg-[var(--g-surface-variant)] text-[var(--g-text)] transition">
+              <span class="material-symbols-outlined text-[16px] text-[var(--g-muted)]">desktop_windows</span>
+              <span>Follow System</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Back to Portal Link -->
+        <a href="http://localhost:8080" onclick="window.location.href='http://' + window.location.hostname + ':8080'; return false;" class="text-xs font-medium px-3.5 py-2 rounded-full google-btn-outlined flex items-center gap-1" title="Central Hub">
+          <span>Portal Hub</span>
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
         </a>
       </div>
     </div>
@@ -52,28 +282,38 @@
 
     <!-- VIEW 1: DASHBOARD (List of Completed Audits) -->
     <div id="view-dashboard" class="space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      
+      <!-- Top Title & Search / Refresh Row (NO duplicate New Maintenance button) -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[var(--g-surface)] p-6 rounded-2xl border border-[var(--g-border)] shadow-[0_1px_2px_0_rgba(0,0,0,0.04)]">
         <div>
-          <h2 class="text-2xl font-extrabold text-white">Periodic Robot Maintenance Audits</h2>
-          <p class="text-xs text-slate-400 mt-1">Select an AGV model template, perform step-by-step inspections, and export official maintenance forms.</p>
+          <h2 class="text-xl sm:text-2xl font-bold text-[var(--g-text)]">Periodic Robot Maintenance Audits</h2>
+          <p class="text-xs text-[var(--g-muted)] mt-1">Select an AGV model template, perform step-by-step inspections, sign digitally, and export official forms.</p>
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="loadReports()" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 transition">
-            🔄 Refresh
-          </button>
-          <button onclick="startNewAudit()" class="text-xs font-bold px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition">
-            + Start Maintenance
+        
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Quick Filter Input -->
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-[var(--g-muted)] text-[18px]">search</span>
+            <input type="text" id="filter-input" onkeyup="filterReports(this.value)" placeholder="Search audits, SN, client..." class="google-input pl-9 pr-4 py-1.5 text-xs rounded-full w-48 sm:w-64" />
+          </div>
+
+          <!-- Refresh Button -->
+          <button onclick="loadReports()" class="text-xs font-medium text-[var(--g-text)] px-3.5 py-2 rounded-full google-btn-outlined flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">refresh</span>
+            <span>Refresh</span>
           </button>
         </div>
       </div>
 
-      <!-- Quick Template Discovery Banner -->
-      <div id="agv-types-banner" class="p-4 rounded-xl glass border border-slate-800 flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-sm">🤖</div>
+      <!-- Quick Template Discovery Banner (Google Cloud Style) -->
+      <div id="agv-types-banner" class="p-5 rounded-2xl bg-[var(--g-surface)] border border-[var(--g-border)] flex flex-wrap items-center justify-between gap-4 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)]">
+        <div class="flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-2xl bg-[var(--g-blue-bg)] text-[var(--g-blue)] border border-[var(--g-blue-border)] flex items-center justify-center font-bold text-base flex-shrink-0">
+            <span class="material-symbols-outlined text-[22px]">smart_toy</span>
+          </div>
           <div>
-            <div class="text-xs font-bold text-slate-200">Discovered AGV Type Models (from <code class="text-cyan-400 bg-slate-950 px-1 py-0.5 rounded">AGV_type/</code>)</div>
-            <div id="discovered-types-text" class="text-[11px] text-slate-400 mt-0.5">Scanning AGV_type directory...</div>
+            <div class="text-xs font-semibold text-[var(--g-text)]">Discovered AGV Type Models (from <code class="text-[var(--g-blue)] bg-[var(--g-surface-variant)] px-1.5 py-0.5 rounded font-mono text-[11px]">AGV_type/</code>)</div>
+            <div id="discovered-types-text" class="text-xs text-[var(--g-muted)] mt-0.5">Scanning AGV_type directory...</div>
           </div>
         </div>
         <div id="quick-templates-badges" class="flex flex-wrap gap-2"></div>
@@ -81,96 +321,120 @@
 
       <!-- Reports List Grid -->
       <div id="reports-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="col-span-full text-center py-12 text-slate-500 text-sm">Loading maintenance records...</div>
+        <div class="col-span-full text-center py-16 bg-[var(--g-surface)] rounded-2xl border border-[var(--g-border)] text-[var(--g-muted)] text-sm">
+          <div class="w-12 h-12 rounded-full bg-[var(--g-surface-variant)] flex items-center justify-center mx-auto mb-3 text-[var(--g-blue)]">
+            <span class="material-symbols-outlined text-[24px]">sync</span>
+          </div>
+          Loading maintenance records...
+        </div>
       </div>
     </div>
 
     <!-- VIEW 2: MAINTENANCE WIZARD / FORM EDITOR -->
     <div id="view-editor" class="hidden space-y-6">
-      <!-- Editor Top Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4 no-print">
-        <button onclick="showDashboard()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 transition">
-          &larr; Back to Records
+      
+      <!-- Editor Top Action Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-4 bg-[var(--g-surface)] p-4 rounded-2xl border border-[var(--g-border)] shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] no-print">
+        <button onclick="showDashboard()" class="text-xs font-medium text-[var(--g-text)] flex items-center gap-1.5 px-4 py-2 rounded-full google-btn-outlined">
+          <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span>Back to Records</span>
         </button>
 
-        <div class="flex items-center gap-2">
-          <button onclick="saveCurrentReport()" class="text-xs font-bold px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
-            💾 Save Report
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Non-blocking Instant Save Button -->
+          <button onclick="saveCurrentReport()" id="btn-save-report" class="text-xs font-medium px-5 py-2 rounded-full google-btn-primary shadow-sm flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">save</span>
+            <span id="save-btn-text">Save Report</span>
           </button>
-          <a id="btn-export-pdf" href="#" target="_blank" class="text-xs font-bold px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white transition flex items-center gap-1.5 shadow">
-            📄 Download Official PDF
+          
+          <a id="btn-export-pdf" href="#" target="_blank" class="text-xs font-medium px-4 py-2 rounded-full bg-[#1e8e3e] hover:bg-[#137333] text-white transition flex items-center gap-1.5 shadow-sm">
+            <span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+            <span>Download Official PDF</span>
           </a>
-          <a id="btn-export-html" href="#" target="_blank" class="text-xs font-bold px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
-            🖨️ Printable HTML
+          
+          <a id="btn-export-html" href="#" target="_blank" class="text-xs font-medium px-4 py-2 rounded-full google-btn-outlined flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">print</span>
+            <span>Printable HTML</span>
           </a>
-          <button onclick="deleteCurrentReport()" class="text-xs text-rose-400 hover:bg-rose-950/40 px-3 py-2 rounded-lg border border-rose-900/50 transition">
-            🗑️ Delete
+          
+          <button onclick="deleteCurrentReport()" class="text-xs font-medium text-[var(--g-red)] hover:bg-[var(--g-red-bg)] px-3.5 py-2 rounded-full border border-[var(--g-red-border)] transition flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">delete</span>
+            <span>Delete</span>
           </button>
         </div>
       </div>
 
       <!-- Step 1: Select AGV Type & Form SOP -->
-      <div class="glass border border-slate-800 rounded-2xl p-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-          <div>
-            <h3 class="text-base font-bold text-white flex items-center gap-2">
-              <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">1</span>
-              Select AGV Model & Form SOP
-            </h3>
-            <p class="text-xs text-slate-400 mt-0.5">SOP checklists and part replacement rules adapt dynamically based on selected AGV type.</p>
+      <div class="google-card p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-[var(--g-border)]">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-[var(--g-blue-bg)] text-[var(--g-blue)] border border-[var(--g-blue-border)] text-xs flex items-center justify-center font-bold">1</span>
+            <div>
+              <h3 class="text-base font-bold text-[var(--g-text)]">Select AGV Model & Form SOP</h3>
+              <p class="text-xs text-[var(--g-muted)] mt-0.5">SOP checklists and part replacement rules adapt dynamically based on selected AGV type.</p>
+            </div>
           </div>
-          <span id="form-code-badge" class="font-mono text-xs font-bold px-3 py-1 rounded bg-slate-900 border border-slate-800 text-cyan-400">
+          <span id="form-code-badge" class="font-mono text-xs font-bold px-3 py-1 rounded-full bg-[var(--g-blue-bg)] text-[var(--g-blue)] border border-[var(--g-blue-border)] self-start sm:self-auto">
             FRM/CS/015-V1.0
           </span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">AGV Family / Type</label>
-            <select id="select-agv-family" onchange="onAgvFamilyChange(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-medium outline-none focus:border-emerald-500">
+            <label class="block text-xs font-semibold text-[var(--g-muted)] mb-1.5">AGV Family / Type</label>
+            <select id="select-agv-family" onchange="onAgvFamilyChange(this.value)" class="google-input w-full rounded-xl px-3.5 py-2 text-xs font-medium outline-none">
             </select>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Maintenance SOP Form Template</label>
-            <select id="select-form-template" onchange="onFormTemplateChange(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-medium outline-none focus:border-emerald-500">
+            <label class="block text-xs font-semibold text-[var(--g-muted)] mb-1.5">Maintenance SOP Form Template</label>
+            <select id="select-form-template" onchange="onFormTemplateChange(this.value)" class="google-input w-full rounded-xl px-3.5 py-2 text-xs font-medium outline-none">
             </select>
           </div>
         </div>
       </div>
 
       <!-- Step 2: Customer & Machine Details -->
-      <div class="glass border border-slate-800 rounded-2xl p-6">
-        <h3 class="text-base font-bold text-white flex items-center gap-2 mb-4">
-          <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">2</span>
-          Customer & AMR Equipment Information
-        </h3>
+      <div class="google-card p-6">
+        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-[var(--g-border)]">
+          <span class="w-7 h-7 rounded-full bg-[var(--g-blue-bg)] text-[var(--g-blue)] border border-[var(--g-blue-border)] text-xs flex items-center justify-center font-bold">2</span>
+          <div>
+            <h3 class="text-base font-bold text-[var(--g-text)]">Customer & AMR Equipment Information</h3>
+            <p class="text-xs text-[var(--g-muted)] mt-0.5">Enter site deployment metadata and hardware identification numbers.</p>
+          </div>
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Customer Side -->
-          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-3">
-            <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Customer Details</h4>
+          <div class="p-5 rounded-xl bg-[var(--g-surface-variant)] border border-[var(--g-border)] space-y-3.5">
+            <h4 class="text-xs font-bold text-[var(--g-blue)] uppercase tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">domain</span>
+              Customer Details
+            </h4>
             <div>
-              <label class="block text-[11px] text-slate-400 mb-0.5">Company Name</label>
-              <input type="text" id="cust-company" placeholder="e.g. Western Digital / DF Test Facility" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-emerald-500" />
+              <label class="block text-[11px] font-medium text-[var(--g-muted)] mb-1">Company Name</label>
+              <input type="text" id="cust-company" placeholder="e.g. Western Digital / DF Test Facility" class="google-input w-full rounded-lg px-3 py-1.5 text-xs" />
             </div>
             <div>
-              <label class="block text-[11px] text-slate-400 mb-0.5">Customer PIC Name</label>
-              <input type="text" id="cust-pic" placeholder="e.g. Mr. Tan (Plant Manager)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-emerald-500" />
+              <label class="block text-[11px] font-medium text-[var(--g-muted)] mb-1">Customer PIC Name</label>
+              <input type="text" id="cust-pic" placeholder="e.g. Mr. Tan (Plant Manager)" class="google-input w-full rounded-lg px-3 py-1.5 text-xs" />
             </div>
             <div>
-              <label class="block text-[11px] text-slate-400 mb-0.5">Servicer / Engineer Name</label>
-              <input type="text" id="cust-servicer" placeholder="e.g. Alex (DF Certified Engineer)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-emerald-500" />
+              <label class="block text-[11px] font-medium text-[var(--g-muted)] mb-1">Servicer / Engineer Name</label>
+              <input type="text" id="cust-servicer" placeholder="e.g. Alex (DF Certified Engineer)" class="google-input w-full rounded-lg px-3 py-1.5 text-xs" />
             </div>
             <div>
-              <label class="block text-[11px] text-slate-400 mb-0.5">Maintenance Date</label>
-              <input type="date" id="cust-date" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-emerald-500" />
+              <label class="block text-[11px] font-medium text-[var(--g-muted)] mb-1">Maintenance Date</label>
+              <input type="date" id="cust-date" class="google-input w-full rounded-lg px-3 py-1.5 text-xs" />
             </div>
           </div>
 
           <!-- Machine Side -->
-          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-3">
-            <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Equipment Details</h4>
-            <div id="dynamic-machine-fields" class="space-y-3">
+          <div class="p-5 rounded-xl bg-[var(--g-surface-variant)] border border-[var(--g-border)] space-y-3.5">
+            <h4 class="text-xs font-bold text-[var(--g-green)] uppercase tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">precision_manufacturing</span>
+              Equipment Details
+            </h4>
+            <div id="dynamic-machine-fields" class="space-y-3.5">
               <!-- Dynamically populated based on form metadata -->
             </div>
           </div>
@@ -178,50 +442,58 @@
       </div>
 
       <!-- Step 3: Recommended Part Replacement Guidelines -->
-      <div id="box-recommended-replacements" class="glass border border-slate-800 rounded-2xl p-6">
-        <h3 class="text-base font-bold text-white flex items-center gap-2 mb-2">
-          <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">3</span>
-          Recommended Part Replacement & Service Request
-        </h3>
-        <p class="text-xs text-slate-400 mb-4">Tick items requested for replacement based on maintenance interval guidelines.</p>
+      <div id="box-recommended-replacements" class="google-card p-6">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="w-7 h-7 rounded-full bg-[var(--g-blue-bg)] text-[var(--g-blue)] border border-[var(--g-blue-border)] text-xs flex items-center justify-center font-bold">3</span>
+          <div>
+            <h3 class="text-base font-bold text-[var(--g-text)]">Recommended Part Replacement & Service Request</h3>
+            <p class="text-xs text-[var(--g-muted)] mt-0.5">Tick items requested for replacement based on maintenance interval guidelines.</p>
+          </div>
+        </div>
 
-        <div id="replacements-container" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div id="replacements-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
           <!-- Checkbox items -->
         </div>
       </div>
 
       <!-- Step 4: Step-by-Step Inspection Checklist -->
-      <div class="space-y-6">
-        <h3 class="text-base font-bold text-white flex items-center gap-2">
-          <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">4</span>
-          Step-by-Step Inspection Checklist
-        </h3>
+      <div class="space-y-4">
+        <div class="flex items-center gap-3 bg-[var(--g-surface)] p-4 rounded-2xl border border-[var(--g-border)] shadow-[0_1px_2px_0_rgba(0,0,0,0.04)]">
+          <span class="w-7 h-7 rounded-full bg-[var(--g-blue-bg)] text-[var(--g-blue)] border border-[var(--g-blue-border)] text-xs flex items-center justify-center font-bold">4</span>
+          <div>
+            <h3 class="text-base font-bold text-[var(--g-text)]">Step-by-Step Inspection Checklist</h3>
+            <p class="text-xs text-[var(--g-muted)] mt-0.5">Inspect physical, electrical, and sensor components. Mark ratings or toggle statuses.</p>
+          </div>
+        </div>
 
-        <div id="inspection-sections-container" class="space-y-6">
+        <div id="inspection-sections-container" class="space-y-4">
           <!-- Dynamic inspection sections rendered here -->
         </div>
       </div>
 
       <!-- Step 5: Remarks & Next Schedule -->
-      <div class="glass border border-slate-800 rounded-2xl p-6 space-y-4">
-        <h3 class="text-base font-bold text-white flex items-center gap-2">
-          <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">5</span>
-          Remarks & Next Maintenance Schedule
-        </h3>
+      <div class="google-card p-6 space-y-4">
+        <div class="flex items-center gap-3 pb-3 border-b border-[var(--g-border)]">
+          <span class="w-7 h-7 rounded-full bg-[var(--g-blue-bg)] text-[var(--g-blue)] border border-[var(--g-blue-border)] text-xs flex items-center justify-center font-bold">5</span>
+          <div>
+            <h3 class="text-base font-bold text-[var(--g-text)]">Remarks & Next Maintenance Schedule</h3>
+            <p class="text-xs text-[var(--g-muted)] mt-0.5">Summary observations, corrective actions taken, and final readiness verdict.</p>
+          </div>
+        </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-400 mb-1">Additional Observations / Corrective Actions Taken</label>
-          <textarea id="rep-notes" rows="3" placeholder="Enter findings, worn components replaced, calibration notes..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white outline-none focus:border-emerald-500"></textarea>
+          <label class="block text-xs font-semibold text-[var(--g-muted)] mb-1.5">Additional Observations / Corrective Actions Taken</label>
+          <textarea id="rep-notes" rows="3" placeholder="Enter findings, worn components replaced, calibration notes..." class="google-input w-full rounded-xl p-3 text-xs"></textarea>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Next Scheduled Maintenance Date</label>
-            <input type="date" id="rep-next-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-emerald-500" />
+            <label class="block text-xs font-semibold text-[var(--g-muted)] mb-1.5">Next Scheduled Maintenance Date</label>
+            <input type="date" id="rep-next-date" class="google-input w-full rounded-xl px-3.5 py-2 text-xs" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Overall Inspection Verdict</label>
-            <select id="rep-verdict" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-semibold outline-none focus:border-emerald-500">
+            <label class="block text-xs font-semibold text-[var(--g-muted)] mb-1.5">Overall Inspection Verdict</label>
+            <select id="rep-verdict" class="google-input w-full rounded-xl px-3.5 py-2 text-xs font-semibold">
               <option value="PASS">✅ Pass — AMR Ready for Operation</option>
               <option value="ATTENTION">⚠️ Attention Required — Plan Future Service</option>
               <option value="FAIL">❌ Critical Defect — Lockout / Immediate Repair</option>
@@ -230,35 +502,79 @@
         </div>
       </div>
 
-      <!-- Step 6: Official Digital Signatures -->
-      <div class="glass border border-slate-800 rounded-2xl p-6">
-        <h3 class="text-base font-bold text-white flex items-center gap-2 mb-4">
-          <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">6</span>
-          Sign & Finalize Maintenance Form
-        </h3>
+      <!-- Step 6: Interactive Digital Mouse / Touch Signature Pad -->
+      <div class="google-card p-6">
+        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-[var(--g-border)]">
+          <span class="w-7 h-7 rounded-full bg-[var(--g-blue-bg)] text-[var(--g-blue)] border border-[var(--g-blue-border)] text-xs flex items-center justify-center font-bold">6</span>
+          <div>
+            <h3 class="text-base font-bold text-[var(--g-text)]">Sign & Finalize Maintenance Form</h3>
+            <p class="text-xs text-[var(--g-muted)] mt-0.5">Draw signature using your mouse, stylus, or touchscreen for official authentication.</p>
+          </div>
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-3">
-            <h4 class="text-xs font-bold text-cyan-400 uppercase">Servicer Sign-off</h4>
-            <input type="text" id="sig-servicer" placeholder="Type name or digital sign token..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono" />
-            <p class="text-[11px] text-slate-500">Signs that all checks have been carried out in accordance with standard procedure.</p>
+          
+          <!-- Servicer Signature Box -->
+          <div class="p-5 rounded-xl bg-[var(--g-surface-variant)] border border-[var(--g-border)] space-y-3">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-[var(--g-blue)] uppercase flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">draw</span>
+                Servicer Sign-off
+              </h4>
+              <div class="flex items-center gap-1">
+                <button type="button" onclick="clearSignature('servicer')" class="text-[11px] text-[var(--g-muted)] hover:text-[var(--g-red)] px-2 py-0.5 rounded google-btn-outlined transition flex items-center gap-0.5">
+                  <span class="material-symbols-outlined text-[14px]">delete</span>
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <!-- Signature Canvas -->
+            <div class="sig-canvas-container">
+              <canvas id="canvas-sig-servicer" class="signature-pad"></canvas>
+            </div>
+            <p class="text-[11px] text-[var(--g-muted)] flex items-center justify-between">
+              <span>Draw signature with mouse / touch</span>
+              <span id="sig-status-servicer" class="text-[10px] text-[var(--g-blue)] font-medium">Ready</span>
+            </p>
           </div>
 
-          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-3">
-            <h4 class="text-xs font-bold text-emerald-400 uppercase">Customer Acknowledgement</h4>
-            <input type="text" id="sig-customer" placeholder="Type customer PIC name or sign token..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono" />
-            <p class="text-[11px] text-slate-500">Acknowledges receipt of inspection findings and scheduled part replacements.</p>
+          <!-- Customer Signature Box -->
+          <div class="p-5 rounded-xl bg-[var(--g-surface-variant)] border border-[var(--g-border)] space-y-3">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-[var(--g-green)] uppercase flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">verified_user</span>
+                Customer Acknowledgement
+              </h4>
+              <div class="flex items-center gap-1">
+                <button type="button" onclick="clearSignature('customer')" class="text-[11px] text-[var(--g-muted)] hover:text-[var(--g-red)] px-2 py-0.5 rounded google-btn-outlined transition flex items-center gap-0.5">
+                  <span class="material-symbols-outlined text-[14px]">delete</span>
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <!-- Signature Canvas -->
+            <div class="sig-canvas-container">
+              <canvas id="canvas-sig-customer" class="signature-pad"></canvas>
+            </div>
+            <p class="text-[11px] text-[var(--g-muted)] flex items-center justify-between">
+              <span>Draw customer PIC signature</span>
+              <span id="sig-status-customer" class="text-[10px] text-[var(--g-green)] font-medium">Ready</span>
+            </p>
           </div>
+
         </div>
       </div>
 
-      <!-- Action Buttons Footer -->
-      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-        <button onclick="showDashboard()" class="text-xs text-slate-400 hover:text-white px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 transition">
+      <!-- Action Buttons Sticky Footer -->
+      <div class="bg-[var(--g-surface)] p-4 rounded-2xl border border-[var(--g-border)] flex items-center justify-end gap-3 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] no-print">
+        <button onclick="showDashboard()" class="text-xs font-medium text-[var(--g-text)] px-5 py-2.5 rounded-full google-btn-outlined">
           Cancel
         </button>
-        <button onclick="saveCurrentReport()" class="text-xs font-bold px-6 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/25 transition">
-          💾 Save & Finalize Form
+        <button onclick="saveCurrentReport()" id="btn-save-bottom" class="text-xs font-medium px-6 py-2.5 rounded-full google-btn-primary shadow-sm flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[18px]">check_circle</span>
+          <span id="save-bottom-text">Save & Finalize Form</span>
         </button>
       </div>
 
@@ -266,17 +582,199 @@
 
   </main>
 
-  <!-- Footer -->
-  <footer class="glass border-t border-slate-800/80 px-6 py-4 text-center text-xs text-slate-500 no-print">
-    <p>DF Automation & Robotics &bull; Preventive Maintenance System &bull; 2026</p>
+  <!-- Google Style Footer -->
+  <footer class="bg-[var(--g-surface)] border-t border-[var(--g-border)] px-6 py-4 text-xs text-[var(--g-muted)] no-print">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+      <div class="flex items-center gap-2">
+        <span class="font-medium text-[var(--g-text)]">DF Automation & Robotics</span>
+        <span class="text-[var(--g-border)]">&bull;</span>
+        <span>Preventive Maintenance System</span>
+        <span class="text-[var(--g-border)]">&bull;</span>
+        <span>ReportLab 5.0 Form Engine</span>
+      </div>
+      <p class="text-[var(--g-muted)]">&copy; 2026 DF Enterprise</p>
+    </div>
   </footer>
+
+  <!-- Non-blocking Google Material Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-[var(--g-surface)] border border-[var(--g-border)] shadow-xl text-xs font-medium text-[var(--g-text)]">
+    <span id="toast-icon" class="material-symbols-outlined text-[20px] text-[var(--g-green)]">check_circle</span>
+    <span id="toast-message">Report saved successfully!</span>
+  </div>
 
   <script>
     let discoveredAgvTypes = [];
     let currentTemplate = null;
     let currentReport = null;
+    let allReports = [];
 
+    // Signature Pad instances
+    const pads = {
+      servicer: { canvas: null, ctx: null, isDrawing: false, hasContent: false },
+      customer: { canvas: null, ctx: null, isDrawing: false, hasContent: false }
+    };
+
+    // ==================== THEME CONTROLLER ====================
+    function initTheme() {
+      const savedTheme = localStorage.getItem('df_theme_mode') || 'system';
+      applyTheme(savedTheme);
+
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if ((localStorage.getItem('df_theme_mode') || 'system') === 'system') {
+          applyTheme('system');
+        }
+      });
+    }
+
+    function toggleThemeMenu() {
+      const menu = document.getElementById('themeMenu');
+      menu.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', e => {
+      const menu = document.getElementById('themeMenu');
+      const btn = document.getElementById('themeBtn');
+      if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    function setTheme(mode) {
+      localStorage.setItem('df_theme_mode', mode);
+      applyTheme(mode);
+      const menu = document.getElementById('themeMenu');
+      if (menu) menu.classList.add('hidden');
+      showToast(`Theme changed to ${mode.toUpperCase()}`, 'palette');
+    }
+
+    function applyTheme(mode) {
+      const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        if (mode === 'dark') icon.textContent = 'dark_mode';
+        else if (mode === 'light') icon.textContent = 'light_mode';
+        else icon.textContent = 'desktop_windows';
+      }
+
+      // Refresh signature canvas colors if initialized
+      setupSignatureCanvas('servicer');
+      setupSignatureCanvas('customer');
+    }
+
+    // ==================== TOAST NOTIFICATIONS ====================
+    let toastTimeout = null;
+    function showToast(msg, iconName = 'check_circle', isError = false) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      const toastIcon = document.getElementById('toast-icon');
+
+      if (!toast) return;
+
+      toastMsg.textContent = msg;
+      toastIcon.textContent = iconName;
+      toastIcon.className = `material-symbols-outlined text-[20px] ${isError ? 'text-[var(--g-red)]' : 'text-[var(--g-green)]'}`;
+
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    // ==================== SIGNATURE CANVAS PAD ====================
+    function setupSignatureCanvas(type) {
+      const canvas = document.getElementById(`canvas-sig-${type}`);
+      if (!canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      
+      canvas.width = (canvas.parentElement.clientWidth || 360) * dpr;
+      canvas.height = 120 * dpr;
+
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 2.5;
+
+      const isDark = document.documentElement.classList.contains('dark');
+      ctx.strokeStyle = isDark ? '#8ab4f8' : '#1a73e8';
+
+      pads[type].canvas = canvas;
+      pads[type].ctx = ctx;
+
+      // Pointer events (Mouse, Touch, Stylus unified)
+      canvas.onpointerdown = e => {
+        pads[type].isDrawing = true;
+        pads[type].hasContent = true;
+        ctx.beginPath();
+        const r = canvas.getBoundingClientRect();
+        ctx.moveTo(e.clientX - r.left, e.clientY - r.top);
+        document.getElementById(`sig-status-${type}`).textContent = 'Signing...';
+      };
+
+      window.addEventListener('pointermove', e => {
+        if (!pads[type].isDrawing) return;
+        const r = canvas.getBoundingClientRect();
+        ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
+        ctx.stroke();
+      });
+
+      window.addEventListener('pointerup', () => {
+        if (pads[type].isDrawing) {
+          pads[type].isDrawing = false;
+          document.getElementById(`sig-status-${type}`).textContent = 'Signed ✓';
+        }
+      });
+    }
+
+    function clearSignature(type) {
+      const p = pads[type];
+      if (p.ctx && p.canvas) {
+        p.ctx.clearRect(0, 0, p.canvas.width, p.canvas.height);
+        p.hasContent = false;
+        document.getElementById(`sig-status-${type}`).textContent = 'Cleared';
+      }
+    }
+
+    function getSignatureData(type) {
+      const p = pads[type];
+      if (p && p.canvas && p.hasContent) {
+        return p.canvas.toDataURL('image/png');
+      }
+      return currentReport && currentReport.signatures ? currentReport.signatures[`${type}Signature`] : '';
+    }
+
+    function loadSignatureIntoCanvas(type, dataUrl) {
+      clearSignature(type);
+      if (!dataUrl || !dataUrl.startsWith('data:image/')) return;
+
+      const p = pads[type];
+      if (!p.ctx || !p.canvas) return;
+
+      const img = new Image();
+      img.onload = () => {
+        const dpr = window.devicePixelRatio || 1;
+        p.ctx.drawImage(img, 0, 0, (p.canvas.width / dpr), (p.canvas.height / dpr));
+        p.hasContent = true;
+        document.getElementById(`sig-status-${type}`).textContent = 'Loaded ✓';
+      };
+      img.src = dataUrl;
+    }
+
+    // ==================== INITIALIZATION ====================
     async function init() {
+      initTheme();
       await loadAgvTypes();
       await loadReports();
     }
@@ -293,7 +791,8 @@
           typesText.textContent = `${discoveredAgvTypes.length} AGV Model Families Found (${discoveredAgvTypes.map(t => t.name).join(', ')})`;
           badgesContainer.innerHTML = discoveredAgvTypes.flatMap(fam => 
             fam.forms.map(f => `
-              <span class="text-[11px] font-mono px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-emerald-400">
+              <span class="text-[11px] font-medium px-3 py-1 rounded-full bg-[var(--g-surface-variant)] border border-[var(--g-border)] text-[var(--g-text)] flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-[var(--g-blue)]"></span>
                 ${f.agvFamily} &bull; ${f.subtitle}
               </span>
             `)
@@ -308,68 +807,107 @@
       const grid = document.getElementById('reports-grid');
       try {
         const res = await fetch('/api/reports');
-        const reports = await res.json();
-        
-        if (reports.length === 0) {
-          grid.innerHTML = `
-            <div class="col-span-full text-center py-12 glass rounded-2xl border border-slate-800">
-              <div class="text-4xl mb-2">🛠️</div>
-              <p class="text-sm text-slate-300 font-bold">No maintenance audit records found</p>
-              <p class="text-xs text-slate-500 mt-1">Click "+ New Maintenance SOP" to start an inspection.</p>
-              <button onclick="startNewAudit()" class="mt-4 text-xs font-bold px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition">
-                + Start First Audit
-              </button>
-            </div>
-          `;
-          return;
-        }
-
-        grid.innerHTML = reports.map(r => {
-          const m = r.machineData || {};
-          const c = r.customerData || {};
-          const model = m.amrModel || m.chargerModel || m.payloadModel || r.formTitle || 'Standard Robot';
-          const serial = m.amrSerial || m.chargerSerial || m.serialNumber || 'N/A';
-          const date = c.date || r.createdAt ? r.createdAt.split('T')[0] : 'Today';
-
-          return `
-            <div class="glass-card rounded-2xl p-5 flex flex-col justify-between hover:border-emerald-500/40 transition-all group">
-              <div>
-                <div class="flex items-center justify-between mb-3">
-                  <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-400">
-                    ${r.formCode || 'FRM/CS/001'}
-                  </span>
-                  <span class="text-xs text-slate-400 font-mono">${date}</span>
-                </div>
-
-                <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">
-                  ${model}
-                </h3>
-                <p class="text-xs text-slate-400 font-mono mt-0.5">SN: ${serial}</p>
-                <p class="text-xs text-slate-500 mt-2 line-clamp-1">Client: <b>${c.company || 'DF Robotics Lab'}</b> &bull; PIC: ${c.picName || '-'}</p>
-              </div>
-
-              <div class="pt-4 mt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                <button onclick="openReport('${r.id}')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white transition">
-                  Edit / Inspect
-                </button>
-                <div class="flex items-center gap-1.5">
-                  <a href="/api/reports/${r.id}/html" target="_blank" class="text-xs px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition" title="Printable HTML">
-                    🖨️ HTML
-                  </a>
-                  <a href="/api/reports/${r.id}/pdf" target="_blank" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition flex items-center gap-1 shadow" title="Download PDF">
-                    📄 PDF
-                  </a>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
-
+        allReports = await res.json();
+        renderReportsGrid(allReports);
       } catch (err) {
-        grid.innerHTML = `<div class="col-span-full text-center text-rose-400 text-sm">Failed to load reports.</div>`;
+        grid.innerHTML = `<div class="col-span-full text-center text-[var(--g-red)] text-sm py-8">Failed to load reports.</div>`;
       }
     }
 
+    function renderReportsGrid(reports) {
+      const grid = document.getElementById('reports-grid');
+      
+      if (!reports || reports.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-16 bg-[var(--g-surface)] rounded-2xl border border-[var(--g-border)]">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#00787c] to-[#00b5b8] p-2 flex items-center justify-center mx-auto mb-3 shadow-md shadow-[#00b5b8]/20">
+              <img src="/static/df_logo_white.png" alt="DF" class="w-full h-full object-contain">
+            </div>
+            <p class="text-sm text-[var(--g-text)] font-bold">No maintenance audit records found</p>
+            <p class="text-xs text-[var(--g-muted)] mt-1">Click "+ New Maintenance SOP" in the header to start an inspection.</p>
+            <button onclick="startNewAudit()" class="mt-4 text-xs font-medium px-4 py-2 rounded-full google-btn-primary shadow-sm">
+              + Start First Audit
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = reports.map(r => {
+        const m = r.machineData || {};
+        const c = r.customerData || {};
+        const model = m.amrModel || m.chargerModel || m.payloadModel || r.formTitle || 'Standard Robot';
+        const serial = m.amrSerial || m.chargerSerial || m.serialNumber || 'N/A';
+        const date = c.date || (r.createdAt ? r.createdAt.split('T')[0] : 'Today');
+
+        let verdictBadge = `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[var(--g-green-bg)] text-[var(--g-green)] border border-[var(--g-green-border)]">PASS</span>`;
+        if (r.verdict === 'ATTENTION') {
+          verdictBadge = `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[var(--g-yellow-bg)] text-[var(--g-yellow)] border border-[var(--g-yellow-border)]">ATTENTION</span>`;
+        } else if (r.verdict === 'FAIL') {
+          verdictBadge = `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[var(--g-red-bg)] text-[var(--g-red)] border border-[var(--g-red-border)]">FAIL</span>`;
+        }
+
+        return `
+          <div class="google-card p-5 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-[var(--g-blue-bg)] text-[var(--g-blue)] border border-[var(--g-blue-border)]">
+                  ${r.formCode || 'FRM/CS/001'}
+                </span>
+                <div class="flex items-center gap-1.5">
+                  ${verdictBadge}
+                  <span class="text-xs text-[var(--g-muted)] font-mono">${date}</span>
+                </div>
+              </div>
+
+              <h3 class="text-base font-bold text-[var(--g-text)] group-hover:text-[var(--g-blue)] transition-colors">
+                ${model}
+              </h3>
+              <p class="text-xs text-[var(--g-muted)] font-mono mt-0.5">SN: ${serial}</p>
+              <p class="text-xs text-[var(--g-muted)] mt-2.5 line-clamp-1">Client: <b class="text-[var(--g-text)]">${c.company || 'DF Robotics Lab'}</b> &bull; PIC: ${c.picName || '-'}</p>
+            </div>
+
+            <div class="pt-4 mt-4 border-t border-[var(--g-border)] flex items-center justify-between gap-2">
+              <button onclick="openReport('${r.id}')" class="text-xs font-medium px-3.5 py-1.5 rounded-full google-btn-outlined flex items-center gap-1">
+                <span class="material-symbols-outlined text-[15px]">edit</span>
+                <span>Edit / Inspect</span>
+              </button>
+              <div class="flex items-center gap-1.5">
+                <a href="/api/reports/${r.id}/html" target="_blank" class="text-xs font-medium px-2.5 py-1.5 rounded-full google-btn-outlined flex items-center gap-1" title="Printable HTML">
+                  <span class="material-symbols-outlined text-[15px]">print</span>
+                  <span>HTML</span>
+                </a>
+                <a href="/api/reports/${r.id}/pdf" target="_blank" class="text-xs font-medium px-3 py-1.5 rounded-full bg-[#1e8e3e] hover:bg-[#137333] text-white transition flex items-center gap-1 shadow-xs" title="Download PDF">
+                  <span class="material-symbols-outlined text-[15px]">picture_as_pdf</span>
+                  <span>PDF</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterReports(query) {
+      if (!query || !query.trim()) {
+        renderReportsGrid(allReports);
+        return;
+      }
+      const q = query.toLowerCase().trim();
+      const filtered = allReports.filter(r => {
+        const m = r.machineData || {};
+        const c = r.customerData || {};
+        const model = (m.amrModel || m.chargerModel || m.payloadModel || r.formTitle || '').toLowerCase();
+        const serial = (m.amrSerial || m.chargerSerial || m.serialNumber || '').toLowerCase();
+        const company = (c.company || '').toLowerCase();
+        const pic = (c.picName || '').toLowerCase();
+        const formCode = (r.formCode || '').toLowerCase();
+        return model.includes(q) || serial.includes(q) || company.includes(q) || pic.includes(q) || formCode.includes(q);
+      });
+      renderReportsGrid(filtered);
+    }
+
+    // ==================== NEW AUDIT / EDITOR ====================
     async function startNewAudit() {
       if (discoveredAgvTypes.length === 0) await loadAgvTypes();
       
@@ -398,6 +936,7 @@
         sections: JSON.parse(JSON.stringify(currentTemplate.sections || [])),
         notes: "",
         nextPeriodicMaintenance: "",
+        verdict: "PASS",
         signatures: {
           servicerSignature: "",
           customerSignature: "",
@@ -469,10 +1008,7 @@
       
       document.getElementById('rep-notes').value = currentReport.notes || '';
       document.getElementById('rep-next-date').value = currentReport.nextPeriodicMaintenance || '';
-
-      const sigs = currentReport.signatures || {};
-      document.getElementById('sig-servicer').value = sigs.servicerSignature || '';
-      document.getElementById('sig-customer').value = sigs.customerSignature || '';
+      document.getElementById('rep-verdict').value = currentReport.verdict || 'PASS';
 
       document.getElementById('btn-export-pdf').href = `/api/reports/${currentReport.id}/pdf`;
       document.getElementById('btn-export-html').href = `/api/reports/${currentReport.id}/html`;
@@ -480,6 +1016,16 @@
       renderMachineFields();
       renderReplacements();
       renderInspectionSections();
+
+      // Setup signature pads & load existing
+      setTimeout(() => {
+        setupSignatureCanvas('servicer');
+        setupSignatureCanvas('customer');
+
+        const sigs = currentReport.signatures || {};
+        if (sigs.servicerSignature) loadSignatureIntoCanvas('servicer', sigs.servicerSignature);
+        if (sigs.customerSignature) loadSignatureIntoCanvas('customer', sigs.customerSignature);
+      }, 50);
     }
 
     function renderMachineFields() {
@@ -489,8 +1035,8 @@
 
       container.innerHTML = fields.map(f => `
         <div>
-          <label class="block text-[11px] text-slate-400 mb-0.5">${f.label}</label>
-          <input type="${f.type || 'text'}" value="${m[f.id] || f.default || ''}" onchange="updateMachineField('${f.id}', this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-emerald-500" />
+          <label class="block text-[11px] font-medium text-[var(--g-muted)] mb-1">${f.label}</label>
+          <input type="${f.type || 'text'}" value="${m[f.id] || f.default || ''}" onchange="updateMachineField('${f.id}', this.value)" class="google-input w-full rounded-lg px-3 py-1.5 text-xs" />
         </div>
       `).join('');
     }
@@ -506,12 +1052,12 @@
       const reps = currentReport.recommendedReplacements || [];
       
       container.innerHTML = reps.map((r, idx) => `
-        <label class="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between cursor-pointer hover:bg-slate-900 transition">
+        <label class="p-3.5 rounded-xl bg-[var(--g-surface-variant)] border border-[var(--g-border)] flex items-center justify-between cursor-pointer hover:bg-[var(--g-blue-bg)] hover:border-[var(--g-blue-border)] transition">
           <div class="flex items-center gap-2.5">
-            <input type="checkbox" ${r.checked ? 'checked' : ''} onchange="toggleReplacement(${idx}, this.checked)" class="w-4 h-4 rounded text-emerald-600 focus:ring-0 bg-slate-950 border-slate-700 cursor-pointer" />
-            <span class="text-xs font-semibold text-slate-200">${r.item}</span>
+            <input type="checkbox" ${r.checked ? 'checked' : ''} onchange="toggleReplacement(${idx}, this.checked)" class="w-4 h-4 rounded text-[var(--g-blue)] focus:ring-0 bg-[var(--g-surface)] border-[var(--g-border)] cursor-pointer" />
+            <span class="text-xs font-medium text-[var(--g-text)]">${r.item}</span>
           </div>
-          <span class="text-[11px] font-mono text-slate-500">${r.guideline}</span>
+          <span class="text-[11px] font-mono text-[var(--g-muted)]">${r.guideline}</span>
         </label>
       `).join('');
     }
@@ -527,13 +1073,16 @@
       const sections = currentReport.sections || [];
 
       container.innerHTML = sections.map((sec, sIdx) => `
-        <div class="glass border border-slate-800 rounded-2xl p-6 space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <h4 class="text-sm font-bold text-emerald-400">${sec.title}</h4>
-            <span class="text-[11px] text-slate-500 font-mono">${(sec.items || []).length} items</span>
+        <div class="google-card p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-[var(--g-border)] pb-3">
+            <h4 class="text-sm font-bold text-[var(--g-blue)] flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">checklist</span>
+              ${sec.title}
+            </h4>
+            <span class="text-[11px] text-[var(--g-muted)] font-mono">${(sec.items || []).length} items</span>
           </div>
 
-          <div class="space-y-3">
+          <div class="space-y-2.5">
             ${(sec.items || []).map((itm, iIdx) => renderSectionItem(sec, itm, sIdx, iIdx)).join('')}
           </div>
         </div>
@@ -544,16 +1093,16 @@
       if (sec.type === 'rating_matrix') {
         const val = itm.value || '1';
         return `
-          <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div class="text-xs font-medium text-slate-200">${itm.label}</div>
+          <div class="p-3 rounded-xl bg-[var(--g-surface-variant)] border border-[var(--g-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="text-xs font-medium text-[var(--g-text)]">${itm.label}</div>
             <div class="flex items-center gap-1.5">
-              <button onclick="setMatrixRating(${sIdx}, ${iIdx}, '1')" class="px-2.5 py-1 rounded text-xs font-bold transition ${val === '1' || val.includes('1') ? 'bg-emerald-600 text-white' : 'bg-slate-950 text-slate-400 hover:bg-slate-800'}">
+              <button onclick="setMatrixRating(${sIdx}, ${iIdx}, '1')" class="px-3 py-1 rounded-full text-xs font-medium transition ${val === '1' || val.includes('1') ? 'bg-[#1e8e3e] text-white shadow-xs' : 'bg-[var(--g-surface)] border border-[var(--g-border)] text-[var(--g-muted)] hover:bg-[var(--g-surface-variant)]'}">
                 1: OK
               </button>
-              <button onclick="setMatrixRating(${sIdx}, ${iIdx}, '2')" class="px-2.5 py-1 rounded text-xs font-bold transition ${val === '2' || val.includes('2') ? 'bg-amber-600 text-white' : 'bg-slate-950 text-slate-400 hover:bg-slate-800'}">
+              <button onclick="setMatrixRating(${sIdx}, ${iIdx}, '2')" class="px-3 py-1 rounded-full text-xs font-medium transition ${val === '2' || val.includes('2') ? 'bg-[#f9ab00] text-[#202124] shadow-xs' : 'bg-[var(--g-surface)] border border-[var(--g-border)] text-[var(--g-muted)] hover:bg-[var(--g-surface-variant)]'}">
                 2: Future Attn
               </button>
-              <button onclick="setMatrixRating(${sIdx}, ${iIdx}, '3')" class="px-2.5 py-1 rounded text-xs font-bold transition ${val === '3' || val.includes('3') ? 'bg-rose-600 text-white' : 'bg-slate-950 text-slate-400 hover:bg-slate-800'}">
+              <button onclick="setMatrixRating(${sIdx}, ${iIdx}, '3')" class="px-3 py-1 rounded-full text-xs font-medium transition ${val === '3' || val.includes('3') ? 'bg-[#d93025] text-white shadow-xs' : 'bg-[var(--g-surface)] border border-[var(--g-border)] text-[var(--g-muted)] hover:bg-[var(--g-surface-variant)]'}">
                 3: Immediate
               </button>
             </div>
@@ -562,25 +1111,25 @@
       } else if (sec.type === 'function_checklist' || sec.type === 'final_checklist' || sec.type === 'toggle_list') {
         const checked = itm.checked !== false;
         return `
-          <label class="p-3 rounded-xl bg-slate-900/50 border border-slate-800/80 flex items-center justify-between cursor-pointer hover:bg-slate-900 transition">
-            <span class="text-xs font-medium text-slate-200">${itm.label}</span>
-            <input type="checkbox" ${checked ? 'checked' : ''} onchange="setToggleItem(${sIdx}, ${iIdx}, this.checked)" class="w-4 h-4 rounded text-emerald-600 focus:ring-0 bg-slate-950 border-slate-700 cursor-pointer" />
+          <label class="p-3 rounded-xl bg-[var(--g-surface-variant)] border border-[var(--g-border)] flex items-center justify-between cursor-pointer hover:bg-[var(--g-blue-bg)] hover:border-[var(--g-blue-border)] transition">
+            <span class="text-xs font-medium text-[var(--g-text)]">${itm.label}</span>
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="setToggleItem(${sIdx}, ${iIdx}, this.checked)" class="w-4 h-4 rounded text-[var(--g-blue)] focus:ring-0 bg-[var(--g-surface)] border-[var(--g-border)] cursor-pointer" />
           </label>
         `;
       } else if (itm.options) {
         return `
-          <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <span class="text-xs font-medium text-slate-200">${itm.label}</span>
-            <select onchange="setItemSelect(${sIdx}, ${iIdx}, this.value)" class="bg-slate-950 border border-slate-700 text-xs rounded-lg px-3 py-1.5 text-white font-semibold outline-none">
+          <div class="p-3 rounded-xl bg-[var(--g-surface-variant)] border border-[var(--g-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <span class="text-xs font-medium text-[var(--g-text)]">${itm.label}</span>
+            <select onchange="setItemSelect(${sIdx}, ${iIdx}, this.value)" class="google-input text-xs rounded-lg px-3 py-1.5 font-medium">
               ${itm.options.map(opt => `<option value="${opt}" ${itm.value === opt ? 'selected' : ''}>${opt}</option>`).join('')}
             </select>
           </div>
         `;
       } else {
         return `
-          <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <span class="text-xs font-medium text-slate-200">${itm.label}</span>
-            <input type="text" value="${itm.value || ''}" onchange="setItemText(${sIdx}, ${iIdx}, this.value)" placeholder="Reading / measurement..." class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1 text-xs text-white outline-none focus:border-emerald-500 w-full sm:w-64" />
+          <div class="p-3 rounded-xl bg-[var(--g-surface-variant)] border border-[var(--g-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <span class="text-xs font-medium text-[var(--g-text)]">${itm.label}</span>
+            <input type="text" value="${itm.value || ''}" onchange="setItemText(${sIdx}, ${iIdx}, this.value)" placeholder="Reading / measurement..." class="google-input rounded-lg px-3 py-1 text-xs w-full sm:w-64" />
           </div>
         `;
       }
@@ -623,12 +1172,18 @@
         populateEditorUI();
         showEditor();
       } catch (err) {
-        alert("Failed to load maintenance record.");
+        showToast("Failed to load maintenance record.", "error", true);
       }
     }
 
+    // ==================== INSTANT NON-BLOCKING SAVE ====================
     async function saveCurrentReport() {
       if (!currentReport) return;
+
+      const saveBtnText = document.getElementById('save-btn-text');
+      const saveBottomText = document.getElementById('save-bottom-text');
+      if (saveBtnText) saveBtnText.textContent = 'Saving...';
+      if (saveBottomText) saveBottomText.textContent = 'Saving...';
 
       currentReport.customerData = {
         company: document.getElementById('cust-company').value,
@@ -641,9 +1196,10 @@
       currentReport.nextPeriodicMaintenance = document.getElementById('rep-next-date').value;
       currentReport.verdict = document.getElementById('rep-verdict').value;
 
+      // Capture Digital Signatures from Canvas Pad
       currentReport.signatures = {
-        servicerSignature: document.getElementById('sig-servicer').value || "AlexE_Signed",
-        customerSignature: document.getElementById('sig-customer').value || "CustomerPIC_Signed",
+        servicerSignature: getSignatureData('servicer') || "AlexE_Signed",
+        customerSignature: getSignatureData('customer') || "CustomerPIC_Signed",
         servicerDate: currentReport.customerData.date,
         customerDate: currentReport.customerData.date
       };
@@ -656,11 +1212,32 @@
         });
         const saved = await res.json();
         currentReport = saved;
-        alert("✅ Maintenance Report successfully saved & signed!");
+
+        // Update local cache in place without duplicate
+        const existingIdx = allReports.findIndex(r => r.id === saved.id);
+        if (existingIdx >= 0) {
+          allReports[existingIdx] = saved;
+        } else {
+          allReports.unshift(saved);
+        }
+
         document.getElementById('btn-export-pdf').href = `/api/reports/${currentReport.id}/pdf`;
         document.getElementById('btn-export-html').href = `/api/reports/${currentReport.id}/html`;
+
+        if (saveBtnText) saveBtnText.textContent = 'Saved ✓';
+        if (saveBottomText) saveBottomText.textContent = 'Saved ✓';
+
+        showToast("✅ Maintenance Report successfully saved & signed!");
+
+        setTimeout(() => {
+          if (saveBtnText) saveBtnText.textContent = 'Save Report';
+          if (saveBottomText) saveBottomText.textContent = 'Save & Finalize Form';
+        }, 1500);
+
       } catch (err) {
-        alert("Failed to save report.");
+        if (saveBtnText) saveBtnText.textContent = 'Save Report';
+        if (saveBottomText) saveBottomText.textContent = 'Save & Finalize Form';
+        showToast("Failed to save report. Please check server connection.", "error", true);
       }
     }
 
@@ -668,10 +1245,11 @@
       if (!currentReport || !confirm("Are you sure you want to delete this maintenance audit?")) return;
       try {
         await fetch(`/api/reports/${currentReport.id}`, { method: 'DELETE' });
+        showToast("Audit record deleted successfully", "delete");
         showDashboard();
         await loadReports();
       } catch (err) {
-        alert("Failed to delete record.");
+        showToast("Failed to delete record.", "error", true);
       }
     }
 
