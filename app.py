@@ -29,7 +29,7 @@ HTML_TEMPLATE = """
           <p class="text-xs text-slate-400">Periodic AMR Audit, Component Wear & Checklist Generator</p>
         </div>
       </div>
-      <a href="http://localhost:8080" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+      <a href="http://localhost:8080" onclick="window.location.href='http://' + window.location.hostname + ':8080'; return false;" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 transition">
         &larr; Back to Portal
       </a>
     </div>
