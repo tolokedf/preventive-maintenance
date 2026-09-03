@@ -1,0 +1,178 @@
+{
+  "formId": "auto_charger",
+  "formCode": "FRM/CS/004-V1.3",
+  "formTitle": "DF Automation & Robotics Sdn Bhd Maintenance Form",
+  "subtitle": "Auto Charger Inspection Form",
+  "agvFamily": "Zalpha",
+  "customerFields": [
+    {
+      "id": "company",
+      "label": "Company",
+      "type": "text"
+    },
+    {
+      "id": "picName",
+      "label": "PIC Name",
+      "type": "text"
+    },
+    {
+      "id": "servicerName",
+      "label": "Servicer Name",
+      "type": "text"
+    },
+    {
+      "id": "date",
+      "label": "Date",
+      "type": "date"
+    }
+  ],
+  "machineFields": [
+    {
+      "id": "chargerModel",
+      "label": "Charger Model",
+      "type": "text",
+      "default": "Zalpha-CH01 / CH02"
+    },
+    {
+      "id": "chargerSerial",
+      "label": "Charger Serial Number",
+      "type": "text"
+    },
+    {
+      "id": "lastServiceDate",
+      "label": "Last Service Date",
+      "type": "date"
+    },
+    {
+      "id": "counterReading",
+      "label": "Counter Reading",
+      "type": "text"
+    }
+  ],
+  "recommendedReplacements": [
+    {
+      "item": "3-Pin AC Cable",
+      "guideline": "24 months"
+    },
+    {
+      "item": "Wiring Harness",
+      "guideline": "12 months"
+    },
+    {
+      "item": "LCD Screen",
+      "guideline": "As per condition"
+    },
+    {
+      "item": "Manual Charger Power Cable",
+      "guideline": "12 months"
+    }
+  ],
+  "sections": [
+    {
+      "id": "tape_distance",
+      "title": "1. Distance between Tape and Charger",
+      "type": "measurement",
+      "items": [
+        {
+          "id": "distance_h",
+          "label": "Current Distance (H) with magnetic tape (mm) [Allowable: 330 mm - 340 mm]",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "copper_plate",
+      "title": "2. Copper Plate Tension and Surface",
+      "type": "rating_matrix",
+      "ratingOptions": [
+        "1 - Check OK",
+        "2 - Require Future Attention",
+        "3 - Require Immediate Attention"
+      ],
+      "items": [
+        {
+          "id": "spring_tension",
+          "label": "Spring able to contract and retract smoothly"
+        },
+        {
+          "id": "plate_scratch",
+          "label": "Copper Plate Scratch / Broken"
+        },
+        {
+          "id": "plate_stained",
+          "label": "Copper Plate Stained"
+        },
+        {
+          "id": "plate_oxidize",
+          "label": "Copper Plate Oxidize (Decolorize)"
+        }
+      ]
+    },
+    {
+      "id": "roller_surface",
+      "title": "3. Roller Surface Conditions (Tick X if Wear Off)",
+      "type": "rating_matrix",
+      "ratingOptions": [
+        "1 - Check OK",
+        "2 - Require Future Attention",
+        "3 - Require Immediate Attention"
+      ],
+      "items": [
+        {
+          "id": "roller_front",
+          "label": "Roller Front Position"
+        },
+        {
+          "id": "roller_rear",
+          "label": "Roller Rear Position"
+        },
+        {
+          "id": "roller_center",
+          "label": "Roller Centre Position (Fast Charger)"
+        }
+      ]
+    },
+    {
+      "id": "voltage_readings",
+      "title": "4. LCD Screen & Voltage Readings (Allowable: > 27.8 V \u00b1 0.3 V)",
+      "type": "voltage_readings",
+      "items": [
+        {
+          "id": "lcd_scratch",
+          "label": "LCD Screen Scratch",
+          "type": "toggle"
+        },
+        {
+          "id": "lcd_flicker",
+          "label": "LCD Screen Flickering",
+          "type": "toggle"
+        },
+        {
+          "id": "lcdReading",
+          "label": "LCD Voltage Reading (V)",
+          "type": "text"
+        },
+        {
+          "id": "plateReading",
+          "label": "Plate Voltage Reading (V)",
+          "type": "text"
+        },
+        {
+          "id": "manualReading",
+          "label": "Manual Charger Voltage Reading (V)",
+          "type": "text"
+        },
+        {
+          "id": "derlin_condition",
+          "label": "Derlin Condition",
+          "type": "select",
+          "options": [
+            "1 - Check OK",
+            "2 - Require Future Attention",
+            "3 - Require Immediate Attention"
+          ]
+        }
+      ]
+    }
+  ]
+}

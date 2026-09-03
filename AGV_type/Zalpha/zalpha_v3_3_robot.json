@@ -1,0 +1,441 @@
+{
+  "formId": "zalpha_v3_3_robot",
+  "formCode": "FRM/CS/015-V1.0",
+  "formTitle": "DF Automation & Robotics Sdn Bhd Maintenance Form",
+  "subtitle": "Zalpha V3.3 Standard AMR Maintenance Form",
+  "agvFamily": "Zalpha",
+  "customerFields": [
+    {
+      "id": "company",
+      "label": "Company",
+      "type": "text"
+    },
+    {
+      "id": "picName",
+      "label": "PIC Name",
+      "type": "text"
+    },
+    {
+      "id": "servicerName",
+      "label": "Servicer Name",
+      "type": "text"
+    },
+    {
+      "id": "date",
+      "label": "Date",
+      "type": "date"
+    }
+  ],
+  "machineFields": [
+    {
+      "id": "amrModel",
+      "label": "AMR Model",
+      "type": "text",
+      "default": "Zalpha V3.3"
+    },
+    {
+      "id": "amrSerial",
+      "label": "AMR Serial Number",
+      "type": "text"
+    },
+    {
+      "id": "lastServiceDate",
+      "label": "Last Service Date",
+      "type": "date"
+    },
+    {
+      "id": "mileageReading",
+      "label": "Mileage Reading (km)",
+      "type": "text"
+    },
+    {
+      "id": "lastServiceMileage",
+      "label": "Last Service Mileage (km)",
+      "type": "text"
+    },
+    {
+      "id": "mainboardVersion",
+      "label": "Mainboard Version",
+      "type": "text"
+    },
+    {
+      "id": "navwizVersion",
+      "label": "Navwiz Version",
+      "type": "text"
+    }
+  ],
+  "recommendedReplacements": [
+    {
+      "item": "Castor Replacement",
+      "guideline": "Every 6 months"
+    },
+    {
+      "item": "Wheel Replacement",
+      "guideline": "Every 6 months"
+    },
+    {
+      "item": "Battery Replacement",
+      "guideline": "Every 12 months"
+    },
+    {
+      "item": "Bumper Replacement",
+      "guideline": "Every 18 months"
+    },
+    {
+      "item": "Obstacle Sensors",
+      "guideline": "As per condition"
+    },
+    {
+      "item": "Line Sensors",
+      "guideline": "As per condition"
+    },
+    {
+      "item": "Drive Module",
+      "guideline": "Every 18 months"
+    },
+    {
+      "item": "Navigation Fine Tune",
+      "guideline": "As per condition"
+    },
+    {
+      "item": "Line Sensor Calibration",
+      "guideline": "As per condition"
+    },
+    {
+      "item": "Wiring Harness",
+      "guideline": "Every 12 months"
+    },
+    {
+      "item": "Manual Charger Socket Cover",
+      "guideline": "As per condition"
+    },
+    {
+      "item": "Fuse",
+      "guideline": "As per condition"
+    }
+  ],
+  "sections": [
+    {
+      "id": "lcd_surface",
+      "title": "1. LCD Surface & Display Inspection",
+      "type": "options_checklist",
+      "items": [
+        {
+          "id": "scratch_crack",
+          "label": "Scratch / Crack",
+          "type": "toggle"
+        },
+        {
+          "id": "blacken_flicker",
+          "label": "Blacken / Flickering",
+          "type": "toggle"
+        },
+        {
+          "id": "no_touch",
+          "label": "No Touch Responses",
+          "type": "toggle"
+        },
+        {
+          "id": "display_blur",
+          "label": "Not Display / Blur / Dim Brightness",
+          "type": "toggle"
+        }
+      ]
+    },
+    {
+      "id": "hardware_functionality",
+      "title": "2. Hardware Functionality Inspection (Tick \u2713 if Full Function)",
+      "type": "function_checklist",
+      "items": [
+        {
+          "id": "line_front",
+          "label": "Line Sensor Front"
+        },
+        {
+          "id": "line_rear",
+          "label": "Line Sensor Rear"
+        },
+        {
+          "id": "bumper_front",
+          "label": "Bumper Front"
+        },
+        {
+          "id": "bumper_rear",
+          "label": "Bumper Rear"
+        },
+        {
+          "id": "obs_front",
+          "label": "Obstacle Sensor Front"
+        },
+        {
+          "id": "obs_rear",
+          "label": "Obstacle Sensor Rear"
+        },
+        {
+          "id": "panel",
+          "label": "Panel / Control Switch"
+        },
+        {
+          "id": "led_blink",
+          "label": "LED Blink Control & Indicators"
+        },
+        {
+          "id": "io_expansion",
+          "label": "IO Expansion Board"
+        },
+        {
+          "id": "charger_manual",
+          "label": "Manual Charger Socket"
+        },
+        {
+          "id": "charger_auto",
+          "label": "Auto Charger Interface"
+        },
+        {
+          "id": "rfid",
+          "label": "RFID Sensor (Additional)"
+        },
+        {
+          "id": "motor_left",
+          "label": "Motor Left & Encoder"
+        },
+        {
+          "id": "motor_right",
+          "label": "Motor Right & Encoder"
+        },
+        {
+          "id": "lidar_top",
+          "label": "Top Safety LiDAR (Live Map Verification)"
+        },
+        {
+          "id": "lidar_front_bot",
+          "label": "Front Bottom LiDAR (Live Map Verification)"
+        },
+        {
+          "id": "lidar_rear_bot",
+          "label": "Rear Bottom LiDAR (Live Map Verification)"
+        }
+      ],
+      "extraFields": [
+        {
+          "id": "batteryVoltage",
+          "label": "Battery Voltage (V)",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "body_condition",
+      "title": "3. Zalpha Body & Chassis Condition",
+      "type": "body_checklist",
+      "items": [
+        {
+          "id": "body_ok",
+          "label": "Body condition OK (No severe crack/scrap on body panels)",
+          "type": "toggle"
+        },
+        {
+          "id": "body_defect_notes",
+          "label": "Defect/Scrap Location Notes",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "bumper_bushing_limitswitch",
+      "title": "4. Bumper Bushing, Limit Switch and Cushion (1: OK, 2: Future Attention, 3: Immediate Attention)",
+      "type": "rating_matrix",
+      "ratingOptions": [
+        "1 - Check OK",
+        "2 - Require Future Attention",
+        "3 - Require Immediate Attention"
+      ],
+      "items": [
+        {
+          "id": "f_r_switch",
+          "label": "Front Right Bumper Limit Switch"
+        },
+        {
+          "id": "f_l_switch",
+          "label": "Front Left Bumper Limit Switch"
+        },
+        {
+          "id": "f_r_bushing",
+          "label": "Front Right Bumper Bushing"
+        },
+        {
+          "id": "f_l_bushing",
+          "label": "Front Left Bumper Bushing"
+        },
+        {
+          "id": "f_cushion",
+          "label": "Front Bumper Cushion"
+        },
+        {
+          "id": "f_frame",
+          "label": "Front Bumper Frame"
+        },
+        {
+          "id": "r_r_switch",
+          "label": "Rear Right Bumper Limit Switch"
+        },
+        {
+          "id": "r_l_switch",
+          "label": "Rear Left Bumper Limit Switch"
+        },
+        {
+          "id": "r_r_bushing",
+          "label": "Rear Right Bumper Bushing"
+        },
+        {
+          "id": "r_l_bushing",
+          "label": "Rear Left Bumper Bushing"
+        },
+        {
+          "id": "r_cushion",
+          "label": "Rear Bumper Cushion"
+        },
+        {
+          "id": "r_frame",
+          "label": "Rear Bumper Frame"
+        }
+      ]
+    },
+    {
+      "id": "charger_sockets",
+      "title": "5. Manual Charger Socket & Auto Charger Plate",
+      "type": "socket_checklist",
+      "items": [
+        {
+          "id": "manual_socket_cond",
+          "label": "Manual Socket Condition",
+          "type": "select",
+          "options": [
+            "OK",
+            "Broken / Scratch",
+            "Burn Marked",
+            "Cap Cover missing/damaged"
+          ]
+        },
+        {
+          "id": "auto_plate_cond",
+          "label": "Auto Charger Plate Condition",
+          "type": "select",
+          "options": [
+            "OK",
+            "Broken / Scratch",
+            "Burn Marked / Decolorized"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wheel_castors",
+      "title": "6. Wheels & Castors Inspection",
+      "type": "wheel_checklist",
+      "items": [
+        {
+          "id": "wheel_thickness_left",
+          "label": "Wheel Thickness (Left)",
+          "type": "select",
+          "options": [
+            "More than 2 mm",
+            "1 mm to 2 mm",
+            "Less than 1 mm"
+          ]
+        },
+        {
+          "id": "wheel_thickness_right",
+          "label": "Wheel Thickness (Right)",
+          "type": "select",
+          "options": [
+            "More than 2 mm",
+            "1 mm to 2 mm",
+            "Less than 1 mm"
+          ]
+        },
+        {
+          "id": "wheel_peel_left",
+          "label": "Wheel Rubber Peel Off (Left)",
+          "type": "toggle"
+        },
+        {
+          "id": "wheel_peel_right",
+          "label": "Wheel Rubber Peel Off (Right)",
+          "type": "toggle"
+        },
+        {
+          "id": "castor_fl",
+          "label": "Castor Front Left",
+          "type": "select",
+          "options": [
+            "OK",
+            "Crack",
+            "Wear Off",
+            "Damaged/Cannot Rotate"
+          ]
+        },
+        {
+          "id": "castor_fr",
+          "label": "Castor Front Right",
+          "type": "select",
+          "options": [
+            "OK",
+            "Crack",
+            "Wear Off",
+            "Damaged/Cannot Rotate"
+          ]
+        },
+        {
+          "id": "castor_rl",
+          "label": "Castor Rear Left",
+          "type": "select",
+          "options": [
+            "OK",
+            "Crack",
+            "Wear Off",
+            "Damaged/Cannot Rotate"
+          ]
+        },
+        {
+          "id": "castor_rr",
+          "label": "Castor Rear Right",
+          "type": "select",
+          "options": [
+            "OK",
+            "Crack",
+            "Wear Off",
+            "Damaged/Cannot Rotate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "final_touch",
+      "title": "7. Final Touch Cleanup",
+      "type": "final_checklist",
+      "items": [
+        {
+          "id": "clean_obs",
+          "label": "Clean Obstacle Sensor Screen"
+        },
+        {
+          "id": "clean_lidar",
+          "label": "Clean LiDAR Sensors"
+        },
+        {
+          "id": "clean_lcd",
+          "label": "Clean LCD Screen"
+        },
+        {
+          "id": "clean_body",
+          "label": "Clean AMR Body & Chassis"
+        },
+        {
+          "id": "clean_charger",
+          "label": "Clean Auto Charger Plate"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "formId": "hooking_payload",
+  "formCode": "FRM/CS/014-V1.0",
+  "formTitle": "DF Automation & Robotics Maintenance Form",
+  "subtitle": "Zalpha Hooking Payload Handler (Zalpha-HW01)",
+  "agvFamily": "Zalpha",
+  "customerFields": [
+    {
+      "id": "company",
+      "label": "Company",
+      "type": "text"
+    },
+    {
+      "id": "picName",
+      "label": "PIC Name",
+      "type": "text"
+    },
+    {
+      "id": "servicerName",
+      "label": "Servicer Name",
+      "type": "text"
+    },
+    {
+      "id": "date",
+      "label": "Date",
+      "type": "date"
+    }
+  ],
+  "machineFields": [
+    {
+      "id": "payloadModel",
+      "label": "Payload Model",
+      "type": "text",
+      "default": "Zalpha-HW01"
+    },
+    {
+      "id": "serialNumber",
+      "label": "Serial Number",
+      "type": "text"
+    },
+    {
+      "id": "lastServiceDate",
+      "label": "Last Service Date",
+      "type": "date"
+    }
+  ],
+  "recommendedReplacements": [
+    {
+      "item": "Linear Motor",
+      "guideline": "3 Months"
+    },
+    {
+      "item": "PE Guide",
+      "guideline": "3 Months"
+    },
+    {
+      "item": "Wheel / Roller",
+      "guideline": "3 Months"
+    },
+    {
+      "item": "Hook mechanism",
+      "guideline": "6 Months"
+    },
+    {
+      "item": "Wire Harness",
+      "guideline": "12 Months"
+    },
+    {
+      "item": "IR sensor",
+      "guideline": "As per condition"
+    }
+  ],
+  "sections": [
+    {
+      "id": "pe_guides",
+      "title": "1. Surface Condition: PE Guide (Tick \u2713 if OK, X if Scratch)",
+      "type": "toggle_list",
+      "items": [
+        {
+          "id": "left_pe",
+          "label": "Left PE Guide Condition OK"
+        },
+        {
+          "id": "right_pe",
+          "label": "Right PE Guide Condition OK"
+        }
+      ]
+    },
+    {
+      "id": "hooking_inspection",
+      "title": "2. Hooking Module Part Inspection",
+      "type": "rating_matrix",
+      "ratingOptions": [
+        "1 - Check OK",
+        "2 - Require Future Attention",
+        "3 - Require Immediate Attention"
+      ],
+      "items": [
+        {
+          "id": "latch_mechanism",
+          "label": "1) Latching Mechanism"
+        },
+        {
+          "id": "linear_motor",
+          "label": "2) Linear Motor"
+        },
+        {
+          "id": "roller",
+          "label": "3) Roller"
+        },
+        {
+          "id": "wire_harness",
+          "label": "4) Wire Harness"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ report.formTitle or "DF Maintenance Form" }} - {{ report.formCode or "FRM" }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; padding: 0 !important; }
+      .print-shadow-none { box-shadow: none !important; border: 1px solid #cbd5e1 !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen p-4 sm:p-8">
+
+  <!-- Print Action Bar -->
+  <div class="max-w-4xl mx-auto mb-6 flex items-center justify-between no-print bg-slate-900 text-white p-4 rounded-xl shadow-md">
+    <div class="flex items-center gap-3">
+      <a href="/" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 transition">&larr; Back to App</a>
+      <span class="text-xs text-slate-400">Official Report View ({{ report.formCode }})</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="window.print()" class="text-xs font-bold bg-cyan-600 hover:bg-cyan-500 px-4 py-2 rounded-lg transition flex items-center gap-1.5 shadow">
+        🖨️ Print / Save as PDF
+      </button>
+      <a href="/api/reports/{{ report.id }}/pdf" class="text-xs font-bold bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-lg transition flex items-center gap-1.5 shadow">
+        📄 Download PDF
+      </a>
+    </div>
+  </div>
+
+  <!-- Official Form Container -->
+  <div class="max-w-4xl mx-auto bg-white border border-slate-300 rounded-xl p-8 shadow-xl print-shadow-none">
+    
+    <!-- Official Header -->
+    <div class="border-b-2 border-slate-900 pb-4 mb-6">
+      <div class="flex items-start justify-between">
+        <div>
+          <h1 class="text-xl font-extrabold text-slate-950 uppercase tracking-tight">DF Automation & Robotics Sdn Bhd</h1>
+          <h2 class="text-sm font-bold text-cyan-700 mt-0.5 uppercase">{{ report.formTitle or "Maintenance Form" }}</h2>
+          <p class="text-xs text-slate-500 mt-0.5">{{ report.subtitle }}</p>
+        </div>
+        <div class="text-right">
+          <span class="inline-block bg-slate-900 text-white text-xs font-mono font-bold px-3 py-1 rounded">
+            FORM NO: {{ report.formCode }}
+          </span>
+          <p class="text-[11px] text-slate-500 mt-1 font-mono">Report ID: {{ report.id }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer & Machine Details Grid -->
+    <div class="grid grid-cols-2 gap-4 mb-6 text-xs border border-slate-300 rounded-lg overflow-hidden">
+      <!-- Col 1: Customer Details -->
+      <div class="border-r border-slate-300">
+        <div class="bg-slate-900 text-white font-bold px-3 py-1.5">CUSTOMER DETAILS</div>
+        <div class="p-3 space-y-1.5 bg-slate-50/50">
+          <div><span class="font-bold text-slate-600">Company:</span> <span class="font-semibold text-slate-900">{{ report.customerData.company or "-" }}</span></div>
+          <div><span class="font-bold text-slate-600">PIC Name:</span> {{ report.customerData.picName or "-" }}</div>
+          <div><span class="font-bold text-slate-600">Servicer Name:</span> {{ report.customerData.servicerName or "-" }}</div>
+          <div><span class="font-bold text-slate-600">Date:</span> {{ report.customerData.date or "-" }}</div>
+        </div>
+      </div>
+
+      <!-- Col 2: Machine Details -->
+      <div>
+        <div class="bg-cyan-800 text-white font-bold px-3 py-1.5">EQUIPMENT / AMR DETAILS</div>
+        <div class="p-3 space-y-1.5 bg-slate-50/50">
+          <div><span class="font-bold text-slate-600">Model:</span> <span class="font-semibold text-slate-900">{{ report.machineData.amrModel or report.machineData.chargerModel or report.machineData.payloadModel or "-" }}</span></div>
+          <div><span class="font-bold text-slate-600">Serial No:</span> {{ report.machineData.amrSerial or report.machineData.chargerSerial or report.machineData.serialNumber or "-" }}</div>
+          <div><span class="font-bold text-slate-600">Last Service Date:</span> {{ report.machineData.lastServiceDate or "-" }}</div>
+          <div><span class="font-bold text-slate-600">Mileage / Counter:</span> {{ report.machineData.mileageReading or report.machineData.counterReading or "-" }} (Last: {{ report.machineData.lastServiceMileage or "-" }})</div>
+          {% if report.machineData.mainboardVersion %}
+          <div><span class="font-bold text-slate-600">Mainboard:</span> {{ report.machineData.mainboardVersion }} | <span class="font-bold text-slate-600">Navwiz:</span> {{ report.machineData.navwizVersion or "-" }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommended Part Replacement / Service Request -->
+    {% if report.recommendedReplacements and report.recommendedReplacements|length > 0 %}
+    <div class="border border-slate-300 rounded-lg overflow-hidden mb-6 text-xs">
+      <div class="bg-slate-900 text-white font-bold px-3 py-1.5 flex justify-between items-center">
+        <span>RECOMMENDED SERVICE / PART REPLACEMENT REQUEST</span>
+        <span class="text-[10px] text-slate-300 font-normal">MAINTENANCE INTERVAL GUIDELINE</span>
+      </div>
+      <div class="grid grid-cols-2 divide-x divide-slate-200 p-2 gap-y-1.5 bg-white">
+        {% for rep in report.recommendedReplacements %}
+        <div class="flex items-center justify-between px-2 py-1 {% if rep.checked %}bg-cyan-50 font-semibold text-cyan-950 rounded{% endif %}">
+          <span class="flex items-center gap-1.5">
+            <span class="font-mono font-bold text-sm">{% if rep.checked %}[✓]{% else %}[&nbsp;&nbsp;]{% endif %}</span>
+            {{ rep.item }}
+          </span>
+          <span class="text-[11px] text-slate-500 italic">{{ rep.guideline }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Step by Step Inspection Sections -->
+    <div class="space-y-4 mb-6">
+      {% for sec in report.sections %}
+      <div class="border border-slate-300 rounded-lg overflow-hidden text-xs">
+        <div class="bg-slate-800 text-white font-bold px-3 py-1.5 flex justify-between items-center">
+          <span>{{ sec.title }}</span>
+          {% if sec.type == 'rating_matrix' %}
+          <span class="text-[10px] text-slate-300 font-normal">1: Check OK | 2: Future Attention | 3: Immediate Attention</span>
+          {% endif %}
+        </div>
+        <div class="divide-y divide-slate-200">
+          {% for itm in sec.items %}
+          <div class="p-2.5 flex items-center justify-between hover:bg-slate-50">
+            <div class="font-medium text-slate-800">{{ itm.label }}</div>
+            <div>
+              {% if sec.type == 'rating_matrix' %}
+                {% if itm.value == '1' or 'OK' in (itm.value|string) %}
+                  <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold font-mono">1 - Check OK</span>
+                {% elif itm.value == '2' or 'Future' in (itm.value|string) %}
+                  <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold font-mono">2 - Future Attention</span>
+                {% elif itm.value == '3' or 'Immediate' in (itm.value|string) %}
+                  <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-bold font-mono">3 - Immediate Attention</span>
+                {% else %}
+                  <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono">{{ itm.value or "1 - Check OK" }}</span>
+                {% endif %}
+              {% elif sec.type == 'function_checklist' or sec.type == 'final_checklist' or sec.type == 'toggle_list' %}
+                {% if itm.checked %}
+                  <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">✓ Full Function / OK</span>
+                {% else %}
+                  <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-bold">✗ Action Needed</span>
+                {% endif %}
+              {% else %}
+                <span class="font-bold text-slate-900">{{ itm.value or itm.checked or "-" }}</span>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Extra Remarks & Schedule -->
+    <div class="border border-slate-300 rounded-lg p-3 bg-slate-50 text-xs mb-6 space-y-2">
+      <div>
+        <span class="font-bold text-slate-700">Remarks / Corrective Actions Taken:</span>
+        <p class="text-slate-900 mt-0.5">{{ report.notes or "All routine maintenance checkpoints executed in compliance with DF AMR operating guidelines." }}</p>
+      </div>
+      <div class="pt-2 border-t border-slate-200 flex justify-between items-center">
+        <div><span class="font-bold text-slate-700">Next Periodic Maintenance:</span> <span class="font-bold text-cyan-800">{{ report.nextPeriodicMaintenance or "In 6 Months" }}</span></div>
+      </div>
+    </div>
+
+    <!-- Signatures Block -->
+    <div class="grid grid-cols-2 gap-4 text-xs border border-slate-300 rounded-lg overflow-hidden">
+      <div class="p-4 border-r border-slate-300 bg-slate-50/50 flex flex-col justify-between h-36">
+        <div class="font-bold text-slate-700">SERVICER SIGNATURE</div>
+        <div class="text-center font-script text-lg text-slate-800 italic">{{ report.signatures.servicerSignature or "[Signed Digitally]" }}</div>
+        <div class="border-t border-slate-300 pt-1 text-[11px]">
+          <div><b>Name:</b> {{ report.customerData.servicerName or "DF Field Engineer" }}</div>
+          <div><b>Date:</b> {{ report.signatures.servicerDate or report.customerData.date }}</div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50/50 flex flex-col justify-between h-36">
+        <div class="font-bold text-slate-700">CUSTOMER SIGNATURE</div>
+        <div class="text-center font-script text-lg text-slate-800 italic">{{ report.signatures.customerSignature or "[Signed Digitally]" }}</div>
+        <div class="border-t border-slate-300 pt-1 text-[11px]">
+          <div><b>Name:</b> {{ report.customerData.picName or "Customer Representative" }}</div>
+          <div><b>Date:</b> {{ report.signatures.customerDate or report.customerData.date }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

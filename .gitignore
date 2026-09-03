@@ -5,3 +5,6 @@ __pycache__/
 .env
 data/reports/*
 !data/reports/.gitkeep
+data/uploads/*
+!data/uploads/.gitkeep
+data/db.json

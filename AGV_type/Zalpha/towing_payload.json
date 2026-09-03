@@ -1,0 +1,166 @@
+{
+  "formId": "towing_payload",
+  "formCode": "FRM/CS/013-V1.0",
+  "formTitle": "DF Automation & Robotics Maintenance Form",
+  "subtitle": "Zalpha Towing Payload Handler (Zalpha-TW01)",
+  "agvFamily": "Zalpha",
+  "customerFields": [
+    {
+      "id": "company",
+      "label": "Company",
+      "type": "text"
+    },
+    {
+      "id": "picName",
+      "label": "PIC Name",
+      "type": "text"
+    },
+    {
+      "id": "servicerName",
+      "label": "Servicer Name",
+      "type": "text"
+    },
+    {
+      "id": "date",
+      "label": "Date",
+      "type": "date"
+    }
+  ],
+  "machineFields": [
+    {
+      "id": "payloadModel",
+      "label": "Payload Model",
+      "type": "text",
+      "default": "Zalpha-TW01"
+    },
+    {
+      "id": "amrSerial",
+      "label": "AMR Serial Number",
+      "type": "text"
+    },
+    {
+      "id": "lastServiceDate",
+      "label": "Last Service Date",
+      "type": "date"
+    }
+  ],
+  "recommendedReplacements": [
+    {
+      "item": "Linear Motor",
+      "guideline": "3 months"
+    },
+    {
+      "item": "Towing Arm",
+      "guideline": "12 months"
+    },
+    {
+      "item": "Wiring Harness",
+      "guideline": "12 months"
+    },
+    {
+      "item": "Spring Gas",
+      "guideline": "12 months"
+    },
+    {
+      "item": "Towing Bumper",
+      "guideline": "6 months"
+    },
+    {
+      "item": "Castor",
+      "guideline": "6 months"
+    },
+    {
+      "item": "Wheel / Roller",
+      "guideline": "6 months"
+    }
+  ],
+  "sections": [
+    {
+      "id": "surface_guide",
+      "title": "1. Surface Condition & Towing Arm",
+      "type": "toggle_list",
+      "items": [
+        {
+          "id": "towing_arm_ok",
+          "label": "Towing Arm Surface OK (No severe scratch)"
+        },
+        {
+          "id": "guide_ok",
+          "label": "Guide Rails OK"
+        }
+      ]
+    },
+    {
+      "id": "towing_inspection",
+      "title": "2. Overall Module Part Inspection",
+      "type": "rating_matrix",
+      "ratingOptions": [
+        "1 - Check OK",
+        "2 - Require Future Attention",
+        "3 - Require Immediate Attention"
+      ],
+      "items": [
+        {
+          "id": "roller_arm",
+          "label": "Roller Arm"
+        },
+        {
+          "id": "roller_arm_bracket",
+          "label": "Roller Arm Bracket"
+        },
+        {
+          "id": "linear_motor",
+          "label": "Linear Motor"
+        },
+        {
+          "id": "towing_paddle",
+          "label": "Towing Paddle"
+        },
+        {
+          "id": "spring_gas",
+          "label": "Spring Gas"
+        },
+        {
+          "id": "wiring_harness",
+          "label": "Wiring Harness"
+        },
+        {
+          "id": "pe_stopper",
+          "label": "PE Stopper"
+        }
+      ]
+    },
+    {
+      "id": "bumper_inspection",
+      "title": "3. Bumper Bushing and Limit Switch",
+      "type": "rating_matrix",
+      "ratingOptions": [
+        "1 - Check OK",
+        "2 - Require Future Attention",
+        "3 - Require Immediate Attention"
+      ],
+      "items": [
+        {
+          "id": "limit_switch_a",
+          "label": "a) Bumper Limit Switch (Right)"
+        },
+        {
+          "id": "limit_switch_b",
+          "label": "b) Bumper Limit Switch (Left)"
+        },
+        {
+          "id": "bushing_a",
+          "label": "c) Bumper Bushing (Right)"
+        },
+        {
+          "id": "bushing_b",
+          "label": "d) Bumper Bushing (Left)"
+        },
+        {
+          "id": "frame",
+          "label": "e) Bumper Frame"
+        }
+      ]
+    }
+  ]
+}
