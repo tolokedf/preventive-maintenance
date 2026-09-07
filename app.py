@@ -42,21 +42,50 @@ os.makedirs(REPORTS_DIR, exist_ok=True)
 os.makedirs(AGV_TYPE_DIR, exist_ok=True)
 
 def read_db():
+    local_backup = BASE_DIR / "data" / "db.json"
     if not DB_FILE.exists():
         initial = {"reports": []}
+        if local_backup.exists() and local_backup != DB_FILE:
+            try:
+                with open(local_backup, "r", encoding="utf-8") as f:
+                    seed = json.load(f)
+                    if isinstance(seed, dict) and seed.get("reports"):
+                        initial = seed
+            except Exception:
+                pass
         write_db(initial)
         return initial
     try:
         with open(DB_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+            if not isinstance(data, dict):
+                data = {"reports": []}
+            if "reports" not in data:
+                data["reports"] = []
+            if not data["reports"] and local_backup.exists() and local_backup != DB_FILE:
+                try:
+                    with open(local_backup, "r", encoding="utf-8") as f:
+                        seed = json.load(f)
+                        if isinstance(seed, dict) and seed.get("reports"):
+                            data["reports"] = seed["reports"]
+                            write_db(data)
+                except Exception:
+                    pass
+            return data
     except Exception:
         initial = {"reports": []}
         write_db(initial)
         return initial
 
 def write_db(data):
-    with open(DB_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+    try:
+        temp_file = DATA_DIR / "db.json.tmp"
+        with open(temp_file, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        temp_file.replace(DB_FILE)
+    except Exception:
+        with open(DB_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
 
 def discover_agv_types():
     """Dynamically scans AGV_type/ folder for available AGV families and form templates."""

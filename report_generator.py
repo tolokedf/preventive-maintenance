@@ -303,7 +303,10 @@ def generate_maintenance_pdf(report: dict) -> bytes:
         cell_contents = []
         if sig_str and str(sig_str).startswith("data:image/"):
             try:
-                img_b64 = re.sub(r'^data:image/.+;base64,', '', str(sig_str))
+                img_b64 = re.sub(r'^data:image/.+;base64,', '', str(sig_str)).strip()
+                missing_padding = len(img_b64) % 4
+                if missing_padding:
+                    img_b64 += '=' * (4 - missing_padding)
                 img_bytes = base64.b64decode(img_b64)
                 img_io = io.BytesIO(img_bytes)
                 sig_img = Image(img_io, width=120, height=40)
