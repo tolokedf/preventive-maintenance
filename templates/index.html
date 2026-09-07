@@ -744,6 +744,9 @@
         p.ctx.clearRect(0, 0, p.canvas.width, p.canvas.height);
         p.hasContent = false;
         document.getElementById(`sig-status-${type}`).textContent = 'Cleared';
+        if (currentReport && currentReport.signatures) {
+          currentReport.signatures[`${type}Signature`] = '';
+        }
       }
     }
 
@@ -752,7 +755,7 @@
       if (p && p.canvas && p.hasContent) {
         return p.canvas.toDataURL('image/png');
       }
-      return currentReport && currentReport.signatures ? currentReport.signatures[`${type}Signature`] : '';
+      return '';
     }
 
     function loadSignatureIntoCanvas(type, dataUrl) {
@@ -1036,7 +1039,7 @@
       container.innerHTML = fields.map(f => `
         <div>
           <label class="block text-[11px] font-medium text-[var(--g-muted)] mb-1">${f.label}</label>
-          <input type="${f.type || 'text'}" value="${m[f.id] || f.default || ''}" onchange="updateMachineField('${f.id}', this.value)" class="google-input w-full rounded-lg px-3 py-1.5 text-xs" />
+          <input type="${f.type || 'text'}" id="machine-field-${f.id}" value="${m[f.id] || f.default || ''}" onchange="updateMachineField('${f.id}', this.value)" class="google-input w-full rounded-lg px-3 py-1.5 text-xs" />
         </div>
       `).join('');
     }
@@ -1169,6 +1172,14 @@
         populateFamilyDropdown(currentReport.agvFamily || "Zalpha");
         populateTemplateDropdown(currentReport.agvFamily || "Zalpha", currentReport.formId || "zalpha_v3_3_robot");
         
+        // If currentReport has empty sections or replacements, populate from template
+        if (!currentReport.sections || currentReport.sections.length === 0) {
+          currentReport.sections = JSON.parse(JSON.stringify(currentTemplate.sections || []));
+        }
+        if (!currentReport.recommendedReplacements || currentReport.recommendedReplacements.length === 0) {
+          currentReport.recommendedReplacements = (currentTemplate.recommendedReplacements || []).map(r => ({ ...r, checked: false }));
+        }
+
         populateEditorUI();
         showEditor();
       } catch (err) {
@@ -1192,14 +1203,27 @@
         date: document.getElementById('cust-date').value
       };
 
+      // Collect machine fields
+      const fields = (currentTemplate && currentTemplate.machineFields) || [];
+      currentReport.machineData = currentReport.machineData || {};
+      fields.forEach(f => {
+        const inp = document.getElementById(`machine-field-${f.id}`);
+        if (inp) {
+          currentReport.machineData[f.id] = inp.value;
+        }
+      });
+
       currentReport.notes = document.getElementById('rep-notes').value;
       currentReport.nextPeriodicMaintenance = document.getElementById('rep-next-date').value;
       currentReport.verdict = document.getElementById('rep-verdict').value;
 
-      // Capture Digital Signatures from Canvas Pad
+      // Capture Digital Signatures from Canvas Pad or retain existing signature
+      const servicerSig = getSignatureData('servicer') || (currentReport.signatures ? currentReport.signatures.servicerSignature : "") || "";
+      const customerSig = getSignatureData('customer') || (currentReport.signatures ? currentReport.signatures.customerSignature : "") || "";
+
       currentReport.signatures = {
-        servicerSignature: getSignatureData('servicer') || "AlexE_Signed",
-        customerSignature: getSignatureData('customer') || "CustomerPIC_Signed",
+        servicerSignature: servicerSig,
+        customerSignature: customerSig,
         servicerDate: currentReport.customerData.date,
         customerDate: currentReport.customerData.date
       };
