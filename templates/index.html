@@ -972,6 +972,7 @@
       populateTemplateDropdown(family);
       const famObj = discoveredAgvTypes.find(f => f.name === family);
       if (famObj && famObj.forms[0]) {
+        if (currentReport) currentReport.agvFamily = family;
         await loadTemplateIntoEditor(family, famObj.forms[0].formId);
         reinitializeReportFromTemplate();
       }

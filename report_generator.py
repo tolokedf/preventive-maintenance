@@ -5,6 +5,7 @@ Produces exact replica of official DF Maintenance Form templates using ReportLab
 import io
 import os
 import re
+import html
 import base64
 from pathlib import Path
 from datetime import datetime
@@ -116,14 +117,15 @@ def generate_maintenance_pdf(report: dict) -> bytes:
     styles = create_styles()
     story = []
     
-    form_code = report.get('formCode', 'FRM/CS/015-V1.0')
-    form_title = report.get('formTitle', 'DF Automation & Robotics Sdn Bhd Maintenance Form')
-    subtitle = report.get('subtitle', 'Preventive Maintenance Inspection Report')
-    cust_data = report.get('customerData', {})
-    machine_data = report.get('machineData', {})
-    replacements = report.get('recommendedReplacements', [])
-    sections = report.get('sections', [])
-    signatures = report.get('signatures', {})
+    report = report or {}
+    form_code = html.escape(str(report.get('formCode') or 'FRM/CS/015-V1.0'))
+    form_title = html.escape(str(report.get('formTitle') or 'DF Automation & Robotics Sdn Bhd Maintenance Form'))
+    subtitle = html.escape(str(report.get('subtitle') or 'Preventive Maintenance Inspection Report'))
+    cust_data = report.get('customerData') or {}
+    machine_data = report.get('machineData') or {}
+    replacements = report.get('recommendedReplacements') or []
+    sections = report.get('sections') or []
+    signatures = report.get('signatures') or {}
     
     # 1. Official Header
     header_data = [
@@ -149,21 +151,34 @@ def generate_maintenance_pdf(report: dict) -> bytes:
     story.append(HRFlowable(width="100%", thickness=1.5, color=BRAND_BLUE, spaceAfter=8))
     
     # 2. Customer & Machine Details Dual Box
+    company = html.escape(str(cust_data.get('company') or '-'))
+    pic_name = html.escape(str(cust_data.get('picName') or '-'))
+    servicer_name = html.escape(str(cust_data.get('servicerName') or '-'))
+    cust_date = html.escape(str(cust_data.get('date') or datetime.now().strftime('%Y-%m-%d')))
+    
+    model = html.escape(str(machine_data.get('amrModel') or machine_data.get('chargerModel') or machine_data.get('payloadModel') or '-'))
+    serial_no = html.escape(str(machine_data.get('amrSerial') or machine_data.get('chargerSerial') or machine_data.get('serialNumber') or '-'))
+    last_service = html.escape(str(machine_data.get('lastServiceDate') or '-'))
+    mileage = html.escape(str(machine_data.get('mileageReading') or machine_data.get('counterReading') or '-'))
+    last_mileage = html.escape(str(machine_data.get('lastServiceMileage') or '-'))
+    mainboard = html.escape(str(machine_data.get('mainboardVersion') or '-'))
+    navwiz = html.escape(str(machine_data.get('navwizVersion') or '-'))
+
     details_table_data = [
         [
             Paragraph("<b>CUSTOMER DETAILS</b>", ParagraphStyle('TH1', fontName='Helvetica-Bold', fontSize=8.5, textColor=colors.white)),
             Paragraph("<b>EQUIPMENT / AMR DETAILS</b>", ParagraphStyle('TH2', fontName='Helvetica-Bold', fontSize=8.5, textColor=colors.white))
         ],
         [
-            Paragraph(f"<b>Company:</b> {cust_data.get('company', '-')}<br/>"
-                      f"<b>PIC Name:</b> {cust_data.get('picName', '-')}<br/>"
-                      f"<b>Servicer Name:</b> {cust_data.get('servicerName', '-')}<br/>"
-                      f"<b>Date:</b> {cust_data.get('date', datetime.now().strftime('%Y-%m-%d'))}", styles['TableValue']),
-            Paragraph(f"<b>Model:</b> {machine_data.get('amrModel', machine_data.get('chargerModel', machine_data.get('payloadModel', '-')))}<br/>"
-                      f"<b>Serial No:</b> {machine_data.get('amrSerial', machine_data.get('chargerSerial', machine_data.get('serialNumber', '-')))}<br/>"
-                      f"<b>Last Service Date:</b> {machine_data.get('lastServiceDate', '-')}<br/>"
-                      f"<b>Mileage / Counter:</b> {machine_data.get('mileageReading', machine_data.get('counterReading', '-'))} (Last: {machine_data.get('lastServiceMileage', '-')})<br/>"
-                      f"<b>Mainboard:</b> {machine_data.get('mainboardVersion', '-')} | <b>Navwiz:</b> {machine_data.get('navwizVersion', '-')}", styles['TableValue'])
+            Paragraph(f"<b>Company:</b> {company}<br/>"
+                      f"<b>PIC Name:</b> {pic_name}<br/>"
+                      f"<b>Servicer Name:</b> {servicer_name}<br/>"
+                      f"<b>Date:</b> {cust_date}", styles['TableValue']),
+            Paragraph(f"<b>Model:</b> {model}<br/>"
+                      f"<b>Serial No:</b> {serial_no}<br/>"
+                      f"<b>Last Service Date:</b> {last_service}<br/>"
+                      f"<b>Mileage / Counter:</b> {mileage} (Last: {last_mileage})<br/>"
+                      f"<b>Mainboard:</b> {mainboard} | <b>Navwiz:</b> {navwiz}", styles['TableValue'])
         ]
     ]
     t_details = Table(details_table_data, colWidths=[265, 275])
@@ -186,13 +201,16 @@ def generate_maintenance_pdf(report: dict) -> bytes:
         rep_rows = [[Paragraph("<b>RECOMMENDED SERVICE / PART REPLACEMENT REQUEST</b>", ParagraphStyle('R1', fontName='Helvetica-Bold', fontSize=8, textColor=colors.white)),
                      Paragraph("<b>MAINTENANCE INTERVAL GUIDELINE</b>", ParagraphStyle('R2', fontName='Helvetica-Bold', fontSize=8, textColor=colors.white, alignment=2))]]
         
-        # Format into 2 items per row
         for rep in replacements:
-            is_checked = rep.get('checked', False)
+            if not isinstance(rep, dict):
+                continue
+            is_checked = bool(rep.get('checked', False))
             check_mark = "<b>[ ✓ ]</b>" if is_checked else "[ &nbsp; ]"
+            item_text = html.escape(str(rep.get('item') or 'Replacement Item'))
+            guideline_text = html.escape(str(rep.get('guideline') or '-'))
             rep_rows.append([
-                Paragraph(f"{check_mark} {rep.get('item')}", styles['TableValueBold'] if is_checked else styles['TableValue']),
-                Paragraph(f"<i>{rep.get('guideline')}</i>", ParagraphStyle('G1', fontName='Helvetica', fontSize=7.5, textColor=TEXT_MUTED, alignment=2))
+                Paragraph(f"{check_mark} {item_text}", styles['TableValueBold'] if is_checked else styles['TableValue']),
+                Paragraph(f"<i>{guideline_text}</i>", ParagraphStyle('G1', fontName='Helvetica', fontSize=7.5, textColor=TEXT_MUTED, alignment=2))
             ])
             
         t_rep = Table(rep_rows, colWidths=[360, 180])
@@ -211,9 +229,11 @@ def generate_maintenance_pdf(report: dict) -> bytes:
 
     # 4. Step-by-Step Inspection Sections
     for sec in sections:
-        sec_title = sec.get('title', 'Inspection Section')
-        sec_type = sec.get('type', 'standard')
-        items = sec.get('items', [])
+        if not isinstance(sec, dict):
+            continue
+        sec_title = html.escape(str(sec.get('title') or 'Inspection Section'))
+        sec_type = str(sec.get('type') or 'standard')
+        items = sec.get('items') or []
         
         sec_rows = [[
             Paragraph(f"<b>{sec_title.upper()}</b>", styles['SectionHeader']),
@@ -226,6 +246,8 @@ def generate_maintenance_pdf(report: dict) -> bytes:
                 Paragraph("<b>1: OK | 2: Future Attention | 3: Immediate</b>", ParagraphStyle('SH3', fontName='Helvetica-Bold', fontSize=7.5, textColor=colors.white, alignment=2))
             ]
             for itm in items:
+                if not isinstance(itm, dict):
+                    continue
                 val = str(itm.get('value', '1')).strip()
                 badge = "[ 1 - Check OK ]"
                 if val == '2' or 'Future' in val:
@@ -235,28 +257,35 @@ def generate_maintenance_pdf(report: dict) -> bytes:
                 elif val == '1' or 'OK' in val:
                     badge = "<font color='#059669'><b>[ 1 - Check OK ]</b></font>"
 
+                label_text = html.escape(str(itm.get('label') or ''))
                 sec_rows.append([
-                    Paragraph(itm.get('label', ''), styles['TableValue']),
+                    Paragraph(label_text, styles['TableValue']),
                     Paragraph(badge, ParagraphStyle('BV', fontName='Helvetica', fontSize=8, alignment=2))
                 ])
         elif sec_type == 'function_checklist' or sec_type == 'final_checklist' or sec_type == 'toggle_list':
             for itm in items:
+                if not isinstance(itm, dict):
+                    continue
                 checked = itm.get('checked', True)
                 mark = "<font color='#059669'><b>[ ✓ FULL FUNCTION / OK ]</b></font>" if checked else "<font color='#dc2626'><b>[ ✗ NOT OK / ATTENTION ]</b></font>"
+                label_text = html.escape(str(itm.get('label') or ''))
                 sec_rows.append([
-                    Paragraph(itm.get('label', ''), styles['TableValue']),
+                    Paragraph(label_text, styles['TableValue']),
                     Paragraph(mark, ParagraphStyle('FM', fontName='Helvetica', fontSize=8, alignment=2))
                 ])
         else:
             for itm in items:
+                if not isinstance(itm, dict):
+                    continue
                 val = itm.get('value', itm.get('checked', 'OK'))
                 if isinstance(val, bool):
                     val_str = "[ ✓ ]" if val else "[ ✗ ]"
                 else:
-                    val_str = str(val)
+                    val_str = str(val if val is not None else 'OK')
+                label_text = html.escape(str(itm.get('label') or ''))
                 sec_rows.append([
-                    Paragraph(itm.get('label', ''), styles['TableValue']),
-                    Paragraph(f"<b>{val_str}</b>", ParagraphStyle('ST', fontName='Helvetica', fontSize=8, alignment=2))
+                    Paragraph(label_text, styles['TableValue']),
+                    Paragraph(f"<b>{html.escape(val_str)}</b>", ParagraphStyle('ST', fontName='Helvetica', fontSize=8, alignment=2))
                 ])
 
         t_sec = Table(sec_rows, colWidths=[380, 160])
@@ -273,13 +302,15 @@ def generate_maintenance_pdf(report: dict) -> bytes:
         story.append(KeepTogether([t_sec, Spacer(1, 8)]))
 
     # 5. Remarks & Recommendations
-    notes = report.get('notes', '').strip()
-    next_service = report.get('nextPeriodicMaintenance', '').strip()
+    notes = str(report.get('notes') or '').strip()
+    next_service = str(report.get('nextPeriodicMaintenance') or '').strip()
+    notes_escaped = html.escape(notes) if notes else 'All standard preventive inspection routines executed in accordance with DF AMR SOP.'
+    next_service_escaped = html.escape(next_service) if next_service else 'In 6 Months'
     
     remarks_data = [
         [Paragraph("<b>OTHER REMARKS & NEXT PERIODIC SCHEDULE</b>", styles['SectionHeader'])],
-        [Paragraph(f"<b>Remarks / Actions Taken:</b> {notes if notes else 'All standard preventive inspection routines executed in accordance with DF AMR SOP.'}<br/>"
-                   f"<b>Next Periodic Maintenance Date:</b> <b>{next_service if next_service else 'In 6 Months'}</b>", styles['TableValue'])]
+        [Paragraph(f"<b>Remarks / Actions Taken:</b> {notes_escaped}<br/>"
+                   f"<b>Next Periodic Maintenance Date:</b> <b>{next_service_escaped}</b>", styles['TableValue'])]
     ]
     t_remarks = Table(remarks_data, colWidths=[540])
     t_remarks.setStyle(TableStyle([
@@ -301,6 +332,8 @@ def generate_maintenance_pdf(report: dict) -> bytes:
     
     def format_signature_cell(sig_str, signer_name, default_name, sig_date):
         cell_contents = []
+        safe_name = html.escape(str(signer_name if signer_name else default_name))
+        safe_date = html.escape(str(sig_date or '-'))
         if sig_str and str(sig_str).startswith("data:image/"):
             try:
                 img_b64 = re.sub(r'^data:image/.+;base64,', '', str(sig_str)).strip()
@@ -314,14 +347,14 @@ def generate_maintenance_pdf(report: dict) -> bytes:
             except Exception:
                 cell_contents.append(Paragraph("<br/><i>[Digital Signature Authenticated]</i>", styles['TableValue']))
         elif sig_str:
-            cell_contents.append(Paragraph(f"<br/><font color='#1a73e8'><b>{sig_str}</b></font>", styles['TableValue']))
+            cell_contents.append(Paragraph(f"<br/><font color='#1a73e8'><b>{html.escape(str(sig_str))}</b></font>", styles['TableValue']))
         else:
             cell_contents.append(Paragraph("<br/>____________________________", styles['TableValue']))
             
         cell_contents.append(Spacer(1, 4))
         cell_contents.append(Paragraph(
-            f"<b>Name:</b> {signer_name if signer_name else default_name}<br/>"
-            f"<b>Date:</b> {sig_date}", styles['TableValue']
+            f"<b>Name:</b> {safe_name}<br/>"
+            f"<b>Date:</b> {safe_date}", styles['TableValue']
         ))
         return cell_contents
 
